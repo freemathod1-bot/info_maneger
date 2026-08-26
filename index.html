@@ -1117,8 +1117,8 @@
 
         /* URL rows */
         .url-col-head {
-            display: grid;
-            grid-template-columns: 110px 1fr 32px;
+            display: flex;
+            align-items: center;
             gap: 6px;
             font-size: 10px;
             font-weight: 600;
@@ -1128,6 +1128,20 @@
             padding: 0 2px;
         }
 
+        .url-col-head .head-label {
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .url-col-head .head-url {
+            flex: 1;
+        }
+
+        .url-col-head .head-rm {
+            width: 32px;
+            flex-shrink: 0;
+        }
+
         .url-list {
             display: flex;
             flex-direction: column;
@@ -1135,10 +1149,9 @@
         }
 
         .url-row {
-            display: grid;
-            grid-template-columns: 110px 1fr 32px;
-            gap: 6px;
+            display: flex;
             align-items: center;
+            gap: 6px;
         }
 
         .url-label-inp {
@@ -1150,7 +1163,11 @@
             font-size: 12px;
             padding: 9px 10px;
             outline: none;
-            transition: border-color var(--trans), background var(--trans);
+            width: 110px;
+            min-width: 100px;
+            max-width: 240px;
+            flex-shrink: 0;
+            transition: border-color var(--trans), background var(--trans), width 0.15s ease;
         }
 
         .url-label-inp:focus {
@@ -1171,7 +1188,9 @@
             font-size: 11.5px;
             padding: 9px 10px;
             outline: none;
-            width: 100%;
+            flex: 1;
+            min-width: 120px;
+            width: auto;
             transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
         }
 
@@ -1676,7 +1695,7 @@
                 <!-- URL rows -->
                 <div class="field">
                     <div class="url-col-head">
-                        <span>Label</span><span>URL</span><span></span>
+                        <span class="head-label">Label</span><span class="head-url">URL</span><span class="head-rm"></span>
                     </div>
                     <div class="url-list" id="urlList"></div>
                     <button type="button" class="btn-add-url" id="addUrlBtn">
@@ -2274,12 +2293,19 @@
             setInterval(() => { if (ghConfig) initGhSync(); }, 60000);
 
             /* ══ URL ROWS ══ */
+            function updateLabelInpWidth(lInp) {
+                const len = lInp.value ? lInp.value.length : (lInp.placeholder || '').length;
+                lInp.style.width = Math.min(Math.max(len + 3, 12), 26) + 'ch';
+            }
+
             function buildUrlRow(labelVal = '', urlVal = '') {
                 const row = document.createElement('div');
                 row.className = 'url-row';
                 const lInp = document.createElement('input');
                 lInp.type = 'text'; lInp.className = 'url-label-inp';
-                lInp.placeholder = 'Label (opt.)'; lInp.maxLength = 30; lInp.value = labelVal;
+                lInp.placeholder = 'Label (opt.)'; lInp.maxLength = 50; lInp.value = labelVal;
+                updateLabelInpWidth(lInp);
+                lInp.addEventListener('input', () => updateLabelInpWidth(lInp));
 
                 const uInp = document.createElement('input');
                 uInp.type = 'url'; uInp.className = 'url-inp';
@@ -2290,7 +2316,7 @@
                 rmBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
                 rmBtn.addEventListener('click', () => {
                     if (urlList.children.length > 1) { row.remove(); }
-                    else { lInp.value = ''; uInp.value = ''; uInp.classList.remove('err'); }
+                    else { lInp.value = ''; uInp.value = ''; uInp.classList.remove('err'); updateLabelInpWidth(lInp); }
                 });
 
                 row.append(lInp, uInp, rmBtn);
