@@ -146,14 +146,18 @@
       {
         "label": "git repo",
         "url": "https://github.com/ytbro8326-sudo/primesrc_single_flaresolver"
+      },
+      {
+        "label": "get severs api key only",
+        "url": "https://github.com/ytbro8326-sudo/primesrc_server_with_api_key_fetch"
       }
     ],
     "info1": "this is use flaresovler to extract media from https://primesrc.me/embed/movie?tmdb=1415800",
-    "info2": "",
+    "info2": "this is fetch the severs keys https://github.com/ytbro8326-sudo/primesrc_server_with_api_key_fetch",
     "tag": "",
     "files": [],
     "createdAt": 1787719751919,
-    "updatedAt": 1787719751919
+    "updatedAt": 1787720115831
   },
   {
     "id": "mt9mb2v35kylf",
