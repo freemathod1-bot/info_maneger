@@ -286,6 +286,10 @@
       {
         "label": "anime extractor  this is use same as ytbro",
         "url": "https://megaplay-extractor-updated1.onrender.com/"
+      },
+      {
+        "label": "this is use same ytbro for both rnder and gitub",
+        "url": "https://anizone-render.onrender.com/"
       }
     ],
     "info1": "",
@@ -293,6 +297,6 @@
     "tag": "",
     "files": [],
     "createdAt": 1787723248415,
-    "updatedAt": 1787723654623
+    "updatedAt": 1787723791087
   }
 ]
