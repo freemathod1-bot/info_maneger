@@ -138,6 +138,21 @@
     white-space: nowrap;
   }
 
+  /* sync status badge */
+  .sync-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font); font-size: 11.5px; font-weight: 500;
+    color: var(--text-muted); background: var(--glass);
+    border: 1px solid var(--glass-b); padding: 6px 12px; border-radius: 99px;
+    white-space: nowrap; cursor: pointer; transition: all var(--trans);
+  }
+  .sync-badge:hover { border-color: var(--glass-b2); background: var(--glass-hover); }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
+  .sync-badge.ok     .sync-dot { background: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
+  .sync-badge.syncing .sync-dot { background: var(--amber); box-shadow: 0 0 8px var(--amber); animation: syncPulse 1s ease-in-out infinite; }
+  .sync-badge.error  .sync-dot { background: var(--red); box-shadow: 0 0 8px var(--red); }
+  @keyframes syncPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
   .btn-primary {
     display: inline-flex; align-items: center; gap: 7px;
     padding: 9px 20px; border: none; border-radius: var(--r-sm);
@@ -495,6 +510,13 @@
   .field-err::before { content: '!'; width: 13px; height: 13px; border-radius: 50%; background: var(--red); color: #fff; font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .field-err:empty::before { display: none; }
 
+  .sync-status-box {
+    font-size: 12px; color: var(--text-muted); line-height: 1.6;
+    background: var(--glass); border: 1px solid var(--glass-b);
+    border-radius: var(--r-sm); padding: 10px 14px;
+    font-family: var(--mono); font-size: 11.5px;
+  }
+
   .field-row { display: flex; gap: 12px; }
 
   /* divider */
@@ -650,6 +672,7 @@
     .url-label-inp { font-size: 11px; }
     .logo-version { display: none; }
     .count-badge  { display: none; }
+    .sync-badge #syncLabel { display: none; }
   }
   @media (max-width: 520px) {
     .col-info1 { display: none; }
@@ -668,7 +691,14 @@
       <span class="logo-version">v2</span>
     </div>
     <div class="header-right">
+      <button class="sync-badge" id="syncBadge" title="GitHub sync status">
+        <span class="sync-dot" id="syncDot"></span>
+        <span id="syncLabel">Not connected</span>
+      </button>
       <span class="count-badge" id="linkCount">0 entries</span>
+      <button class="icon-btn" id="settingsBtn" title="GitHub storage settings">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" stroke="currentColor" stroke-width="1.5"/><path d="M16.2 12.3a1.4 1.4 0 00.28 1.55l.05.05a1.7 1.7 0 11-2.4 2.4l-.05-.05a1.4 1.4 0 00-1.55-.28 1.4 1.4 0 00-.85 1.28V17.3a1.7 1.7 0 01-3.4 0v-.08a1.4 1.4 0 00-.9-1.25 1.4 1.4 0 00-1.55.28l-.05.05a1.7 1.7 0 11-2.4-2.4l.05-.05a1.4 1.4 0 00.28-1.55 1.4 1.4 0 00-1.28-.85H2.7a1.7 1.7 0 010-3.4h.08a1.4 1.4 0 001.25-.9 1.4 1.4 0 00-.28-1.55l-.05-.05a1.7 1.7 0 112.4-2.4l.05.05a1.4 1.4 0 001.55.28h.06a1.4 1.4 0 00.85-1.28V2.7a1.7 1.7 0 013.4 0v.08a1.4 1.4 0 00.85 1.28h.06a1.4 1.4 0 001.55-.28l.05-.05a1.7 1.7 0 112.4 2.4l-.05.05a1.4 1.4 0 00-.28 1.55v.06a1.4 1.4 0 001.28.85h.08a1.7 1.7 0 010 3.4h-.08a1.4 1.4 0 00-1.28.85z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </button>
       <button class="btn-primary" id="openModalBtn">
         <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <span>Add Link</span>
@@ -831,6 +861,73 @@
   </div>
 </div>
 
+<!-- ═══════════════════ SETTINGS MODAL (GitHub Sync) ═══════════════════ -->
+<div class="modal-overlay" id="settingsOverlay">
+  <div class="modal">
+    <div class="modal-accent"></div>
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <div class="modal-title">GitHub Storage</div>
+        <div class="modal-subtitle">Your data is saved to a GitHub repo, with a local cache for speed</div>
+      </div>
+      <button class="btn-close" id="closeSettingsBtn" title="Close (Esc)">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="field">
+        <label class="field-label" for="ghToken">Personal Access Token <span class="req">*</span></label>
+        <input class="input input-mono" type="password" id="ghToken" placeholder="ghp_…"/>
+        <div class="field-hint">Needs repo contents read/write. A fine-grained token scoped to just this one repo is safest. It's stored only in this browser's local storage — never sent anywhere but api.github.com.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="ghOwner">Owner <span class="req">*</span></label>
+          <input class="input" type="text" id="ghOwner" placeholder="your-username"/>
+        </div>
+        <div class="field">
+          <label class="field-label" for="ghRepo">Repository <span class="req">*</span></label>
+          <input class="input" type="text" id="ghRepo" placeholder="linkvault-data"/>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="ghBranch">Branch</label>
+          <input class="input" type="text" id="ghBranch" placeholder="main"/>
+        </div>
+        <div class="field">
+          <label class="field-label" for="ghDataPath">Data file path</label>
+          <input class="input input-mono" type="text" id="ghDataPath" placeholder="linkvault/data.json"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="ghFilesPath">Files folder path</label>
+        <input class="input input-mono" type="text" id="ghFilesPath" placeholder="linkvault/files"/>
+      </div>
+
+      <div class="field-err" id="errSettings"></div>
+
+      <div class="section-divider">Status</div>
+      <div class="sync-status-box" id="syncStatusBox">Not connected yet.</div>
+
+    </div>
+
+    <div class="modal-footer" style="justify-content: space-between;">
+      <button class="btn-ghost" id="disconnectGhBtn">Disconnect</button>
+      <div style="display:flex; gap:10px;">
+        <button class="btn-ghost" id="cancelSettingsBtn">Cancel</button>
+        <button class="btn-primary" id="saveSettingsBtn">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 9l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Connect &amp; Sync
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════ TOAST ═══════════════════ -->
 <div class="toast" id="toast">
   <div class="toast-dot"></div>
@@ -885,6 +982,23 @@ const addUrlBtn    = $('addUrlBtn');
 const fileInput    = $('fileInput');
 const fileDropZone = $('fileDropZone');
 const fileList     = $('fileList');
+const syncBadge    = $('syncBadge');
+const syncDot      = $('syncDot');
+const syncLabel    = $('syncLabel');
+const settingsBtn  = $('settingsBtn');
+const settingsOverlay = $('settingsOverlay');
+const closeSettingsBtn = $('closeSettingsBtn');
+const cancelSettingsBtn = $('cancelSettingsBtn');
+const saveSettingsBtn = $('saveSettingsBtn');
+const disconnectGhBtn = $('disconnectGhBtn');
+const ghToken    = $('ghToken');
+const ghOwner    = $('ghOwner');
+const ghRepo     = $('ghRepo');
+const ghBranch   = $('ghBranch');
+const ghDataPath = $('ghDataPath');
+const ghFilesPath = $('ghFilesPath');
+const errSettings = $('errSettings');
+const syncStatusBox = $('syncStatusBox');
 
 /* ── Utils ── */
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
@@ -963,6 +1077,243 @@ function showToast(msg, type='success') {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
+
+/* ══════════════════════════════════════════════════════════
+   GITHUB SYNC
+   GitHub is the durable source of truth; localStorage + IndexedDB
+   are just a fast local cache so the UI never waits on the network.
+══════════════════════════════════════════════════════════ */
+const GH_CONFIG_KEY = 'linkvault_gh_config';
+const loadGhConfig = () => { try { return JSON.parse(localStorage.getItem(GH_CONFIG_KEY)) || null; } catch { return null; } };
+const saveGhConfig = c => localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(c));
+const clearGhConfig = () => localStorage.removeItem(GH_CONFIG_KEY);
+
+let ghConfig = loadGhConfig();
+let ghDataSha = null;
+let ghSyncQueue = Promise.resolve();
+
+function setSyncStatus(state, text) {
+  syncBadge.className = `sync-badge ${state}`;
+  syncLabel.textContent = text;
+}
+
+function ghHeaders() {
+  return {
+    'Authorization': `token ${ghConfig.token}`,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+}
+
+/* base64 helpers — unicode-safe for text, byte-safe for binary blobs */
+const textToBase64 = str => btoa(unescape(encodeURIComponent(str)));
+const base64ToText = b64 => decodeURIComponent(escape(atob(b64.replace(/\n/g,''))));
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+function base64ToBlob(b64, type) {
+  const clean = b64.replace(/\n/g, '');
+  const bytes = atob(clean);
+  const arr = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+  return new Blob([arr], { type: type || 'application/octet-stream' });
+}
+
+async function ghGetFile(path) {
+  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}?ref=${encodeURIComponent(ghConfig.branch)}&_=${Date.now()}`;
+  const res = await fetch(url, { headers: ghHeaders() });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GitHub couldn't read ${path} (${res.status}).`);
+  const json = await res.json();
+  return { sha: json.sha, rawB64: json.content, text: json.content ? base64ToText(json.content) : '' };
+}
+async function ghPutFile(path, base64Content, sha, message) {
+  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+  const body = { message, content: base64Content, branch: ghConfig.branch };
+  if (sha) body.sha = sha;
+  const res = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (!res.ok) {
+    const t = await res.text().catch(()=> '');
+    throw new Error(`GitHub couldn't save ${path} (${res.status}). ${t.slice(0,150)}`);
+  }
+  return (await res.json()).content.sha;
+}
+async function ghDeleteFile(path, sha, message) {
+  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+  const res = await fetch(url, { method: 'DELETE', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sha, branch: ghConfig.branch }) });
+  if (!res.ok && res.status !== 404) throw new Error(`GitHub couldn't delete ${path} (${res.status}).`);
+}
+async function ghTestConnection() {
+  const res = await fetch(`https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}`, { headers: ghHeaders() });
+  if (res.status === 401 || res.status === 403) throw new Error('Token is invalid or lacks access to this repo.');
+  if (res.status === 404) throw new Error("Repo not found — check the owner/repo names and the token's access.");
+  if (!res.ok) throw new Error(`Couldn't reach the repo (${res.status}).`);
+}
+
+function ghFilePath(fileId, name) {
+  const safe = String(name || 'file').replace(/[^\w.\-]+/g, '_').slice(0, 80);
+  return `${ghConfig.filesPath.replace(/\/$/, '')}/${fileId}__${safe}`;
+}
+
+/* Pull remote data.json. Returns an array, or null if it doesn't exist yet. */
+async function ghPullData() {
+  const file = await ghGetFile(ghConfig.dataPath);
+  if (!file) { ghDataSha = null; return null; }
+  ghDataSha = file.sha;
+  try {
+    const parsed = JSON.parse(file.text || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    throw new Error('Remote data.json is not valid JSON.');
+  }
+}
+
+/* Push the current `links` array to the remote data.json (whole-file overwrite). */
+async function ghPushData() {
+  if (!ghConfig) return;
+  setSyncStatus('syncing', 'Syncing…');
+  const content = textToBase64(JSON.stringify(links, null, 2));
+  ghDataSha = await ghPutFile(ghConfig.dataPath, content, ghDataSha, `Update LinkVault data (${links.length} entries)`);
+  setSyncStatus('ok', 'Synced');
+}
+
+/* Serialize pushes so overlapping saves never race on the file's sha. */
+function queueGhPush() {
+  if (!ghConfig) return Promise.resolve();
+  ghSyncQueue = ghSyncQueue.then(() => ghPushData()).catch(err => {
+    console.error(err);
+    setSyncStatus('error', 'Sync failed');
+    showToast("Saved locally, but GitHub sync failed — it'll retry on the next change", 'error');
+  });
+  return ghSyncQueue;
+}
+
+async function ghUploadFile(fileId, file) {
+  const b64 = await blobToBase64(file);
+  await ghPutFile(ghFilePath(fileId, file.name), b64, null, `Add file ${file.name}`);
+}
+async function ghDownloadFile(fileId, name, type) {
+  const file = await ghGetFile(ghFilePath(fileId, name));
+  if (!file) return null;
+  return base64ToBlob(file.rawB64, type);
+}
+async function ghDeleteStoredFile(fileId, name) {
+  const path = ghFilePath(fileId, name);
+  const file = await ghGetFile(path).catch(() => null);
+  if (file) await ghDeleteFile(path, file.sha, `Remove file ${name}`);
+}
+
+/* ── Settings modal ── */
+function openSettingsModal() {
+  errSettings.textContent = '';
+  const c = ghConfig || {};
+  ghToken.value = c.token || '';
+  ghOwner.value = c.owner || '';
+  ghRepo.value = c.repo || '';
+  ghBranch.value = c.branch || 'main';
+  ghDataPath.value = c.dataPath || 'linkvault/data.json';
+  ghFilesPath.value = c.filesPath || 'linkvault/files';
+  syncStatusBox.textContent = ghConfig
+    ? `Connected to ${ghConfig.owner}/${ghConfig.repo} (${ghConfig.branch}). Data file: ${ghConfig.dataPath}`
+    : 'Not connected yet. Add a token and repo below to start syncing.';
+  settingsOverlay.classList.add('open');
+  setTimeout(() => ghToken.focus(), 100);
+}
+function closeSettingsModal() { settingsOverlay.classList.remove('open'); }
+
+async function ghConnectAndSync() {
+  errSettings.textContent = '';
+  const token = ghToken.value.trim();
+  const owner = ghOwner.value.trim();
+  const repo  = ghRepo.value.trim();
+  const branch = ghBranch.value.trim() || 'main';
+  const dataPath  = (ghDataPath.value.trim()  || 'linkvault/data.json').replace(/^\/+/, '');
+  const filesPath = (ghFilesPath.value.trim() || 'linkvault/files').replace(/^\/+|\/+$/g, '');
+
+  if (!token || !owner || !repo) {
+    errSettings.textContent = 'Token, owner, and repository are required.';
+    return;
+  }
+
+  const candidate = { token, owner, repo, branch, dataPath, filesPath };
+  const prevConfig = ghConfig;
+  const prevHTML = saveSettingsBtn.innerHTML;
+  saveSettingsBtn.disabled = true;
+  saveSettingsBtn.innerHTML = 'Connecting…';
+  ghConfig = candidate;
+  setSyncStatus('syncing', 'Connecting…');
+
+  try {
+    await ghTestConnection();
+    const remote = await ghPullData();
+    if (remote) {
+      const map = new Map();
+      [...remote, ...links].forEach(l => {
+        const ex = map.get(l.id);
+        if (!ex || (l.updatedAt||0) >= (ex.updatedAt||0)) map.set(l.id, l);
+      });
+      links = [...map.values()];
+    }
+    migrate();
+    saveLinks(links);
+    saveGhConfig(candidate);
+    await ghPushData();
+    render();
+    setSyncStatus('ok', 'Synced');
+    showToast('Connected to GitHub ✓');
+    closeSettingsModal();
+  } catch (err) {
+    ghConfig = prevConfig;
+    errSettings.textContent = err.message || "Couldn't connect — check your details and try again.";
+    setSyncStatus(prevConfig ? 'ok' : 'idle', prevConfig ? 'Synced' : 'Not connected');
+  } finally {
+    saveSettingsBtn.disabled = false;
+    saveSettingsBtn.innerHTML = prevHTML;
+  }
+}
+
+async function initGhSync() {
+  if (!ghConfig) { setSyncStatus('idle', 'Not connected'); return; }
+  setSyncStatus('syncing', 'Syncing…');
+  try {
+    const remote = await ghPullData();
+    if (remote) {
+      const map = new Map();
+      [...remote, ...links].forEach(l => {
+        const ex = map.get(l.id);
+        if (!ex || (l.updatedAt||0) >= (ex.updatedAt||0)) map.set(l.id, l);
+      });
+      links = [...map.values()];
+      migrate();
+      saveLinks(links);
+      render();
+    }
+    setSyncStatus('ok', 'Synced');
+  } catch (err) {
+    console.error(err);
+    setSyncStatus('error', 'Sync failed');
+  }
+}
+
+settingsBtn.addEventListener('click', openSettingsModal);
+syncBadge.addEventListener('click', openSettingsModal);
+closeSettingsBtn.addEventListener('click', closeSettingsModal);
+cancelSettingsBtn.addEventListener('click', closeSettingsModal);
+saveSettingsBtn.addEventListener('click', ghConnectAndSync);
+settingsOverlay.addEventListener('click', e => { if (e.target === settingsOverlay) closeSettingsModal(); });
+disconnectGhBtn.addEventListener('click', () => {
+  if (!ghConfig) { closeSettingsModal(); return; }
+  if (!confirm('Disconnect GitHub sync? Your data stays saved on this device, but new changes will stop syncing to GitHub until you reconnect.')) return;
+  clearGhConfig(); ghConfig = null; ghDataSha = null;
+  setSyncStatus('idle', 'Not connected');
+  syncStatusBox.textContent = 'Not connected yet. Add a token and repo below to start syncing.';
+  showToast('Disconnected from GitHub');
+});
 
 /* ══ URL ROWS ══ */
 function buildUrlRow(labelVal='', urlVal='') {
