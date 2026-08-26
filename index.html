@@ -477,63 +477,37 @@
         .link-table {
             width: 100%;
             border-collapse: collapse;
+            display: block;
         }
 
         .link-table thead {
-            background: rgba(255, 255, 255, 0.025);
-            border-bottom: 1px solid var(--glass-b);
+            display: none;
         }
 
-        .link-table th {
-            padding: 13px 12px;
-            text-align: left;
-            font-size: 10.5px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            white-space: nowrap;
-            user-select: none;
+        .link-table tbody {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
         }
 
-        .link-table th[data-sort] {
-            cursor: pointer;
-            transition: color var(--trans);
-        }
-
-        .link-table th[data-sort]:hover {
-            color: var(--violet);
-        }
-
-        .th-inner {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .sort-arrow {
-            font-size: 10px;
-            opacity: 0.7;
-        }
-
-        .link-table td {
-            padding: 12px 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            vertical-align: middle;
-            font-size: 13px;
-        }
-
-        /* row hover glow (attached to first cell, NOT the <tr>, so the
-     table's auto column-width algorithm never gets thrown off) */
         .link-table tbody tr {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 10px;
+            padding: 10px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
             transition: background var(--trans);
-        }
-
-        .link-table tbody tr td:first-child {
+            width: max-content;
+            min-width: 100%;
             position: relative;
         }
 
-        .link-table tbody tr td:first-child::before {
+        .link-table tbody tr:first-child {
+            border-top: none;
+        }
+
+        .link-table tbody tr::before {
             content: '';
             position: absolute;
             left: 0;
@@ -549,51 +523,52 @@
             background: var(--glass-hover);
         }
 
-        .link-table tbody tr:hover td:first-child::before {
+        .link-table tbody tr:hover::before {
             opacity: 1;
         }
 
-        /* columns - tightly packed ("near by near") dynamically sizing by title length */
+        .link-table td {
+            padding: 0;
+            border: none;
+            vertical-align: middle;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* columns - tightly packed dynamically per row based on title length */
         .col-sl {
-            width: 1%;
-            white-space: nowrap;
-            padding-left: 18px;
+            flex-shrink: 0;
         }
 
         .col-title {
-            width: 1%;
-            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .col-link {
-            width: 1%;
-            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .col-info1 {
-            width: 1%;
-            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .col-info2 {
-            width: 1%;
-            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .col-tag {
-            width: 1%;
-            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .col-storage {
-            width: 1%;
-            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .col-actions {
-            width: auto;
-            white-space: nowrap;
-            padding-right: 18px;
+            flex-shrink: 0;
+            margin-left: 4px;
         }
 
         /* SL number */
@@ -609,13 +584,13 @@
             display: inline-block;
         }
 
-        /* title */
+        /* title - takes only the length needed per row */
         .cell-title {
             font-weight: 600;
             font-size: 13.5px;
             color: var(--text);
-            max-width: 48ch;
-            width: max-content;
+            max-width: 55ch;
+            width: auto;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -623,21 +598,20 @@
 
         /* multi-link cell */
         .cell-links {
-            display: flex;
-            flex-direction: column;
+            display: inline-flex;
+            align-items: center;
             gap: 6px;
-            width: max-content;
         }
 
         .cell-link-row {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
             max-width: 260px;
         }
 
         .cell-link-row a {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
             font-family: var(--mono);
@@ -677,6 +651,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            max-width: 180px;
         }
 
         .more-badge {
@@ -693,12 +668,15 @@
         /* info */
         .cell-info {
             color: var(--text-muted);
-            font-size: 12.5px;
+            font-size: 11.5px;
             max-width: 160px;
-            width: max-content;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: var(--r-xs);
+            padding: 2px 7px;
         }
 
         /* tag */
@@ -1569,6 +1547,13 @@
             </div>
             <select id="filterTag" class="filter-select">
                 <option value="">All tags</option>
+            </select>
+            <select id="sortSelect" class="filter-select">
+                <option value="">Sort: Default</option>
+                <option value="title">Sort: Title</option>
+                <option value="info1">Sort: Info 1</option>
+                <option value="info2">Sort: Info 2</option>
+                <option value="tag">Sort: Tag</option>
             </select>
             <button class="icon-btn" id="exportBtn" title="Export JSON">
                 <svg viewBox="0 0 20 20" fill="none">
@@ -2524,7 +2509,7 @@
 
             /* ── Links cell ── */
             function renderLinksCell(urls) {
-                if (!urls || !urls.length) return '<span class="dash">—</span>';
+                if (!urls || !urls.length) return '';
                 const MAX = 3, shown = urls.slice(0, MAX), rest = urls.length - MAX;
                 let h = '<div class="cell-links">';
                 shown.forEach((u, i) => {
@@ -2543,7 +2528,7 @@
 
             /* ── Storage cell ── */
             function renderStorageCell(files) {
-                if (!files || !files.length) return '<span class="dash">—</span>';
+                if (!files || !files.length) return '';
                 const MAX = 2, shown = files.slice(0, MAX), rest = files.length - MAX;
                 let h = '<div class="cell-storage">';
                 shown.forEach(f => {
@@ -2575,26 +2560,23 @@
                     statFilterWrap.style.display = 'none';
                 }
 
-                document.querySelectorAll('.link-table th[data-sort]').forEach(th => {
-                    const arrow = th.querySelector('.sort-arrow');
-                    if (!arrow) return;
-                    arrow.textContent = th.dataset.sort === sortKey ? (sortDir === 1 ? ' ↑' : ' ↓') : '';
-                });
-
                 if (!rows.length) {
                     tableBody.innerHTML = ''; emptyState.classList.add('visible'); return;
                 }
                 emptyState.classList.remove('visible');
 
-                tableBody.innerHTML = rows.map((e, i) => `
+                tableBody.innerHTML = rows.map((e, i) => {
+                    const linksHtml = renderLinksCell(e.urls);
+                    const storageHtml = renderStorageCell(e.files);
+                    return `
     <tr data-id="${esc(e.id)}">
       <td class="col-sl"><span class="sl-num">${String(i + 1).padStart(2, '0')}</span></td>
       <td class="col-title"><div class="cell-title" title="${esc(e.title)}">${esc(e.title)}</div></td>
-      <td class="col-link">${renderLinksCell(e.urls)}</td>
-      <td class="col-info1"><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1) || '<span class="dash">—</span>'}</div></td>
-      <td class="col-info2"><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2) || '<span class="dash">—</span>'}</div></td>
-      <td class="col-tag">${e.tag ? `<span class="tag-pill">${esc(e.tag)}</span>` : '<span class="dash">—</span>'}</td>
-      <td class="col-storage">${renderStorageCell(e.files)}</td>
+      ${linksHtml ? `<td class="col-link">${linksHtml}</td>` : ''}
+      ${e.info1 ? `<td class="col-info1"><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1)}</div></td>` : ''}
+      ${e.info2 ? `<td class="col-info2"><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2)}</div></td>` : ''}
+      ${e.tag ? `<td class="col-tag"><span class="tag-pill">${esc(e.tag)}</span></td>` : ''}
+      ${storageHtml ? `<td class="col-storage">${storageHtml}</td>` : ''}
       <td class="col-actions">
         <div class="action-group">
           <button class="btn-action edit" data-id="${esc(e.id)}" title="Edit">
@@ -2606,7 +2588,8 @@
         </div>
       </td>
     </tr>
-  `).join('');
+  `;
+                }).join('');
             }
 
             /* ── Migrate ── */
@@ -2625,7 +2608,8 @@
                 if (db) handleDelete(db.dataset.id);
                 if (fb) downloadStoredFile(fb.dataset.fileId, fb.dataset.fileName);
             });
-            document.querySelectorAll('.link-table th[data-sort]').forEach(th => th.addEventListener('click', () => handleSort(th.dataset.sort)));
+            const sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) sortSelect.addEventListener('change', () => { sortKey = sortSelect.value; sortDir = 1; render(); });
             searchInput.addEventListener('input', () => { filterQuery = searchInput.value.trim(); render(); });
             filterSelect.addEventListener('change', () => { filterTag = filterSelect.value; render(); });
             openModalBtn.addEventListener('click', () => openModal());
