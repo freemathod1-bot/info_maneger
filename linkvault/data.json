@@ -202,6 +202,10 @@
       {
         "label": "anidb",
         "url": "https://github.com/ytbro8326-sudo/anidb_stream"
+      },
+      {
+        "label": "flixcloud streaming",
+        "url": "https://ytbro8326-sudo.github.io/flixcloud_html/"
       }
     ],
     "info1": "",
@@ -209,7 +213,7 @@
     "tag": "",
     "files": [],
     "createdAt": 1787720275214,
-    "updatedAt": 1787720275214
+    "updatedAt": 1787721644670
   },
   {
     "id": "mt9mk6gcnj3kf",
