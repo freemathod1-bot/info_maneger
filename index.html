@@ -267,18 +267,21 @@
     vertical-align: middle; font-size: 13px;
   }
 
-  /* row hover glow */
+  /* row hover glow (attached to first cell, NOT the <tr>, so the
+     table's auto column-width algorithm never gets thrown off) */
   .link-table tbody tr {
     transition: background var(--trans);
+  }
+  .link-table tbody tr td:first-child {
     position: relative;
   }
-  .link-table tbody tr::before {
+  .link-table tbody tr td:first-child::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
     background: var(--grad);
     opacity: 0; transition: opacity var(--trans);
   }
   .link-table tbody tr:hover { background: var(--glass-hover); }
-  .link-table tbody tr:hover::before { opacity: 1; }
+  .link-table tbody tr:hover td:first-child::before { opacity: 1; }
 
   /* columns */
   .col-sl      { width: 52px; }
