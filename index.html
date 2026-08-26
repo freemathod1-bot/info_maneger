@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LinkVault — save and organise your links with title, info, and tags." />
+  <title>LinkVault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0d0f14;
+      --surface:     #141720;
+      --surface2:    #1c2030;
+      --border:      #272c3d;
+      --border2:     #323852;
+      --accent:      #5d7dff;
+      --accent-glow: rgba(93,125,255,0.18);
+      --text:        #e8eaf2;
+      --text-muted:  #7a82a0;
+      --text-dim:    #4b5270;
+      --green:       #3ecf8e;
+      --red:         #ff5c6a;
+      --yellow:      #ffc04d;
+      --font:        'Space Grotesk', system-ui, sans-serif;
+      --mono:        'JetBrains Mono', monospace;
+      --radius:      10px;
+      --radius-sm:   6px;
+      --shadow:      0 4px 24px rgba(0,0,0,0.45);
+      --trans:       0.18s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ─── HEADER ────────────────────────────────────────── */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 9px; }
+    .logo-mark {
+      font-size: 22px;
+      color: var(--accent);
+      line-height: 1;
+      filter: drop-shadow(0 0 8px var(--accent));
+    }
+    .logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .header-meta { display: flex; align-items: center; gap: 14px; }
+    .link-count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+    .btn-add {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--trans), box-shadow var(--trans);
+      letter-spacing: 0.2px;
+    }
+    .btn-add:hover { background: #7494ff; box-shadow: 0 0 14px var(--accent-glow); }
+
+    /* ─── TOOLBAR ───────────────────────────────────────── */
+    .toolbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .toolbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .search-wrap { flex: 1; position: relative; }
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      padding: 8px 12px 8px 34px;
+      outline: none;
+      transition: border-color var(--trans);
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .search-input::placeholder { color: var(--text-dim); }
+
+    .filter-wrap { display: flex; align-items: center; gap: 8px; }
+    .filter-select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      padding: 8px 10px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color var(--trans);
+    }
+    .filter-select:focus { border-color: var(--accent); }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color var(--trans), border-color var(--trans);
+    }
+    .btn-icon:hover { color: var(--accent); border-color: var(--accent); }
+    .btn-icon svg { width: 16px; height: 16px; }
+
+    /* ─── TABLE ─────────────────────────────────────────── */
+    .table-wrap {
+      max-width: 1200px;
+      margin: 28px auto 60px;
+      padding: 0 24px;
+    }
+    .link-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .link-table thead {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border2);
+    }
+    .link-table th {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      user-select: none;
+    }
+    .link-table th[data-sort] { cursor: pointer; }
+    .link-table th[data-sort]:hover { color: var(--accent); }
+    .sort-arrow { font-size: 10px; margin-left: 4px; }
+    .link-table td {
+      padding: 13px 14px;
+      border-top: 1px solid var(--border);
+      vertical-align: middle;
+      font-size: 13px;
+    }
+    .link-table tbody tr { transition: background var(--trans); }
+    .link-table tbody tr:hover { background: var(--surface2); }
+
+    .col-sl      { width: 48px; }
+    .col-title   { min-width: 150px; }
+    .col-link    { min-width: 180px; max-width: 240px; }
+    .col-info1   { min-width: 110px; }
+    .col-info2   { min-width: 110px; }
+    .col-tag     { width: 90px; }
+    .col-actions { width: 80px; }
+
+    .sl-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+    .cell-title {
+      font-weight: 600;
+      color: var(--text);
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cell-link a {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-decoration: none;
+      display: block;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: color var(--trans);
+    }
+    .cell-link a:hover { color: #8fa9ff; text-decoration: underline; }
+    .cell-info {
+      color: var(--text-muted);
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tag-pill {
+      display: inline-block;
+      background: rgba(93,125,255,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(93,125,255,0.3);
+      border-radius: 99px;
+      padding: 2px 9px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .action-group { display: flex; gap: 6px; }
+    .btn-edit, .btn-delete {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      cursor: pointer;
+      transition: color var(--trans), border-color var(--trans), background var(--trans);
+    }
+    .btn-edit  { color: var(--text-muted); }
+    .btn-edit:hover  { color: var(--yellow); border-color: var(--yellow); background: rgba(255,192,77,0.08); }
+    .btn-delete { color: var(--text-muted); }
+    .btn-delete:hover { color: var(--red); border-color: var(--red); background: rgba(255,92,106,0.08); }
+    .btn-edit svg, .btn-delete svg { width: 14px; height: 14px; }
+
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 72px 24px;
+      color: var(--text-dim);
+      text-align: center;
+      gap: 12px;
+    }
+    .empty-state.visible { display: flex; }
+    .empty-icon { font-size: 40px; opacity: 0.4; }
+    .empty-state p { font-size: 14px; line-height: 1.6; }
+    .empty-state strong { color: var(--text-muted); }
+
+    /* ─── MODAL ─────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--trans);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 500px;
+      margin: 0 16px;
+      box-shadow: var(--shadow);
+      transform: translateY(12px);
+      transition: transform var(--trans);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      transition: color var(--trans);
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-body {
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .req { color: var(--red); }
+    .field input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color var(--trans);
+    }
+    .field input:focus { border-color: var(--accent); }
+    .field input::placeholder { color: var(--text-dim); }
+    .field input.err { border-color: var(--red); }
+    .field-err { font-size: 11px; color: var(--red); min-height: 14px; }
+    .field-row { display: flex; gap: 12px; }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-cancel {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-family: var(--font);
+      font-size: 13px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: border-color var(--trans), color var(--trans);
+    }
+    .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
+    .btn-save {
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background var(--trans), box-shadow var(--trans);
+    }
+    .btn-save:hover { background: #7494ff; box-shadow: 0 0 12px var(--accent-glow); }
+
+    /* ─── TOAST ─────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      z-index: 300;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: var(--green); color: var(--green); }
+    .toast.error   { border-color: var(--red);   color: var(--red); }
+
+    /* ─── SCROLLBAR ─────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 760px) {
+      .header-inner, .toolbar-inner, .table-wrap { padding-left: 14px; padding-right: 14px; }
+      .col-info2, .col-tag { display: none; }
+      .field-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">⬡</span>
+        <span class="logo-text">LinkVault</span>
+      </div>
+      <div class="header-meta">
+        <span class="link-count" id="linkCount">0 links</span>
+        <button class="btn-add" id="openModalBtn">+ Add Link</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search title, info, or URL…" />
+      </div>
+      <div class="filter-wrap">
+        <select id="filterTag" class="filter-select">
+          <option value="">All tags</option>
+        </select>
+        <button class="btn-icon" id="exportBtn" title="Export JSON">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4 4 4-4M4 16h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <label class="btn-icon" title="Import JSON">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 17V7M6 11l4-4 4 4M4 4h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input type="file" id="importFile" accept=".json" style="display:none" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <main class="table-wrap">
+    <table class="link-table" id="linkTable">
+      <thead>
+        <tr>
+          <th class="col-sl">#</th>
+          <th class="col-title" data-sort="title">Title <span class="sort-arrow"></span></th>
+          <th class="col-link">Link</th>
+          <th class="col-info1" data-sort="info1">Info 1 <span class="sort-arrow"></span></th>
+          <th class="col-info2" data-sort="info2">Info 2 <span class="sort-arrow"></span></th>
+          <th class="col-tag"   data-sort="tag">Tag <span class="sort-arrow"></span></th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState">
+      <span class="empty-icon">🔗</span>
+      <p>No links yet. Hit <strong>+ Add Link</strong> to start.</p>
+    </div>
+  </main>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add Link</h2>
+        <button class="modal-close" id="closeModalBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="inputTitle">Title <span class="req">*</span></label>
+          <input type="text" id="inputTitle" placeholder="e.g. MDN Web Docs" />
+          <span class="field-err" id="errTitle"></span>
+        </div>
+        <div class="field">
+          <label for="inputLink">URL <span class="req">*</span></label>
+          <input type="url" id="inputLink" placeholder="https://…" />
+          <span class="field-err" id="errLink"></span>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="inputInfo1">Info 1</label>
+            <input type="text" id="inputInfo1" placeholder="Category, author…" />
+          </div>
+          <div class="field">
+            <label for="inputInfo2">Info 2</label>
+            <input type="text" id="inputInfo2" placeholder="Date, status…" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="inputTag">Tag</label>
+          <input type="text" id="inputTag" placeholder="design, dev, reference…" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="cancelBtn">Cancel</button>
+        <button class="btn-save"   id="saveBtn">Save Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* =========================================================
+       LinkVault — inline script
+       Persists to localStorage. Zero dependencies.
+       ========================================================= */
+    (function () {
+      'use strict';
+
+      const STORAGE_KEY = 'linkvault_links';
+
+      function loadLinks() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+        catch { return []; }
+      }
+      function saveLinks(links) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+      }
+
+      /* ── State ─────────────────────────────────────────── */
+      let links       = loadLinks();
+      let editingId   = null;
+      let sortKey     = null;
+      let sortDir     = 1;
+      let filterQuery = '';
+      let filterTag   = '';
+
+      /* ── DOM ───────────────────────────────────────────── */
+      const tableBody    = document.getElementById('tableBody');
+      const emptyState   = document.getElementById('emptyState');
+      const linkCount    = document.getElementById('linkCount');
+      const searchInput  = document.getElementById('searchInput');
+      const filterSelect = document.getElementById('filterTag');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalTitle   = document.getElementById('modalTitle');
+      const openModalBtn = document.getElementById('openModalBtn');
+      const closeModalBtn= document.getElementById('closeModalBtn');
+      const cancelBtn    = document.getElementById('cancelBtn');
+      const saveBtn      = document.getElementById('saveBtn');
+      const exportBtn    = document.getElementById('exportBtn');
+      const importFile   = document.getElementById('importFile');
+      const toast        = document.getElementById('toast');
+      const inputTitle   = document.getElementById('inputTitle');
+      const inputLink    = document.getElementById('inputLink');
+      const inputInfo1   = document.getElementById('inputInfo1');
+      const inputInfo2   = document.getElementById('inputInfo2');
+      const inputTag     = document.getElementById('inputTag');
+      const errTitle     = document.getElementById('errTitle');
+      const errLink      = document.getElementById('errLink');
+
+      /* ── Helpers ───────────────────────────────────────── */
+      function uid() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      }
+
+      function esc(str) {
+        return String(str)
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      }
+
+      function validateURL(s) { try { new URL(s); return true; } catch { return false; } }
+
+      /* ── Toast ─────────────────────────────────────────── */
+      let toastTimer = null;
+      function showToast(msg, type = 'success') {
+        toast.textContent = msg;
+        toast.className = `toast ${type} show`;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      }
+
+      /* ── Modal ─────────────────────────────────────────── */
+      function openModal(link = null) {
+        editingId        = link ? link.id    : null;
+        modalTitle.textContent = link ? 'Edit Link' : 'Add Link';
+        inputTitle.value = link ? link.title : '';
+        inputLink.value  = link ? link.url   : '';
+        inputInfo1.value = link ? link.info1 : '';
+        inputInfo2.value = link ? link.info2 : '';
+        inputTag.value   = link ? link.tag   : '';
+        clearErrors();
+        modalOverlay.classList.add('open');
+        setTimeout(() => inputTitle.focus(), 80);
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('open');
+        editingId = null;
+      }
+
+      function clearErrors() {
+        errTitle.textContent = '';
+        errLink.textContent  = '';
+        inputTitle.classList.remove('err');
+        inputLink.classList.remove('err');
+      }
+
+      /* ── Save ──────────────────────────────────────────── */
+      function handleSave() {
+        clearErrors();
+        let valid = true;
+        const title = inputTitle.value.trim();
+        const url   = inputLink.value.trim();
+        const info1 = inputInfo1.value.trim();
+        const info2 = inputInfo2.value.trim();
+        const tag   = inputTag.value.trim().toLowerCase();
+
+        if (!title) {
+          errTitle.textContent = 'Title is required.';
+          inputTitle.classList.add('err');
+          valid = false;
+        }
+        if (!url) {
+          errLink.textContent = 'URL is required.';
+          inputLink.classList.add('err');
+          valid = false;
+        } else if (!validateURL(url)) {
+          errLink.textContent = 'Enter a valid URL (include https://).';
+          inputLink.classList.add('err');
+          valid = false;
+        }
+        if (!valid) return;
+
+        if (editingId) {
+          const idx = links.findIndex(l => l.id === editingId);
+          if (idx !== -1) {
+            links[idx] = { ...links[idx], title, url, info1, info2, tag, updatedAt: Date.now() };
+            showToast('Link updated ✓');
+          }
+        } else {
+          links.push({ id: uid(), title, url, info1, info2, tag, createdAt: Date.now(), updatedAt: Date.now() });
+          showToast('Link saved ✓');
+        }
+
+        saveLinks(links);
+        closeModal();
+        render();
+      }
+
+      /* ── Delete ────────────────────────────────────────── */
+      function handleDelete(id) {
+        if (!confirm('Delete this link?')) return;
+        links = links.filter(l => l.id !== id);
+        saveLinks(links);
+        render();
+        showToast('Link deleted', 'error');
+      }
+
+      /* ── Sort ──────────────────────────────────────────── */
+      function handleSort(key) {
+        sortDir = sortKey === key ? sortDir * -1 : 1;
+        sortKey = key;
+        render();
+      }
+
+      /* ── Filter ────────────────────────────────────────── */
+      function getFiltered() {
+        let result = [...links];
+        if (filterQuery) {
+          const q = filterQuery.toLowerCase();
+          result = result.filter(l =>
+            l.title.toLowerCase().includes(q) ||
+            l.url.toLowerCase().includes(q)   ||
+            l.info1.toLowerCase().includes(q) ||
+            l.info2.toLowerCase().includes(q) ||
+            l.tag.toLowerCase().includes(q)
+          );
+        }
+        if (filterTag) result = result.filter(l => l.tag === filterTag);
+        if (sortKey) {
+          result.sort((a, b) => {
+            const va = (a[sortKey] || '').toString().toLowerCase();
+            const vb = (b[sortKey] || '').toString().toLowerCase();
+            return va < vb ? -sortDir : va > vb ? sortDir : 0;
+          });
+        }
+        return result;
+      }
+
+      /* ── Tag dropdown ──────────────────────────────────── */
+      function refreshTagFilter() {
+        const tags    = [...new Set(links.map(l => l.tag).filter(Boolean))].sort();
+        const current = filterSelect.value;
+        filterSelect.innerHTML = '<option value="">All tags</option>';
+        tags.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t; opt.textContent = t;
+          filterSelect.appendChild(opt);
+        });
+        filterSelect.value = tags.includes(current) ? current : '';
+      }
+
+      /* ── Render ────────────────────────────────────────── */
+      function render() {
+        refreshTagFilter();
+        const rows = getFiltered();
+        linkCount.textContent = `${links.length} link${links.length !== 1 ? 's' : ''}`;
+
+        document.querySelectorAll('.link-table th[data-sort]').forEach(th => {
+          const arrow = th.querySelector('.sort-arrow');
+          if (!arrow) return;
+          arrow.textContent = th.dataset.sort === sortKey ? (sortDir === 1 ? ' ↑' : ' ↓') : '';
+        });
+
+        if (rows.length === 0) {
+          tableBody.innerHTML = '';
+          emptyState.classList.add('visible');
+          return;
+        }
+        emptyState.classList.remove('visible');
+
+        tableBody.innerHTML = rows.map((link, idx) => `
+          <tr data-id="${esc(link.id)}">
+            <td><span class="sl-num">${String(idx + 1).padStart(2, '0')}</span></td>
+            <td><div class="cell-title" title="${esc(link.title)}">${esc(link.title)}</div></td>
+            <td class="cell-link">
+              <a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer" title="${esc(link.url)}">${esc(link.url)}</a>
+            </td>
+            <td><div class="cell-info" title="${esc(link.info1)}">${esc(link.info1) || '<span style="color:var(--text-dim)">—</span>'}</div></td>
+            <td><div class="cell-info" title="${esc(link.info2)}">${esc(link.info2) || '<span style="color:var(--text-dim)">—</span>'}</div></td>
+            <td>${link.tag ? `<span class="tag-pill">${esc(link.tag)}</span>` : '<span style="color:var(--text-dim)">—</span>'}</td>
+            <td>
+              <div class="action-group">
+                <button class="btn-edit"   data-id="${esc(link.id)}" title="Edit">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M11 2l3 3-8 8H3v-3l8-8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="btn-delete" data-id="${esc(link.id)}" title="Delete">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6 4V3h4v1M5 4l1 9h4l1-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      /* ── Events ────────────────────────────────────────── */
+      tableBody.addEventListener('click', e => {
+        const editBtn   = e.target.closest('.btn-edit');
+        const deleteBtn = e.target.closest('.btn-delete');
+        if (editBtn)   { const link = links.find(l => l.id === editBtn.dataset.id);   if (link) openModal(link); }
+        if (deleteBtn) { handleDelete(deleteBtn.dataset.id); }
+      });
+
+      document.querySelectorAll('.link-table th[data-sort]').forEach(th =>
+        th.addEventListener('click', () => handleSort(th.dataset.sort))
+      );
+
+      searchInput.addEventListener('input',  () => { filterQuery = searchInput.value.trim(); render(); });
+      filterSelect.addEventListener('change',() => { filterTag   = filterSelect.value;        render(); });
+
+      openModalBtn.addEventListener('click',  () => openModal());
+      closeModalBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click',     closeModal);
+      saveBtn.addEventListener('click',       handleSave);
+
+      modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeModal();
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && modalOverlay.classList.contains('open')) handleSave();
+      });
+
+      /* ── Export ────────────────────────────────────────── */
+      exportBtn.addEventListener('click', () => {
+        if (!links.length) { showToast('No links to export', 'error'); return; }
+        const blob = new Blob([JSON.stringify(links, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `linkvault-${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast(`Exported ${links.length} links ✓`);
+      });
+
+      /* ── Import ────────────────────────────────────────── */
+      importFile.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          try {
+            const imported = JSON.parse(ev.target.result);
+            if (!Array.isArray(imported)) throw new Error();
+            const existingIds = new Set(links.map(l => l.id));
+            const fresh = imported.filter(l => l.url && l.title && !existingIds.has(l.id));
+            links = [...links, ...fresh];
+            saveLinks(links);
+            render();
+            showToast(`Imported ${fresh.length} new link(s) ✓`);
+          } catch { showToast('Invalid JSON file', 'error'); }
+          importFile.value = '';
+        };
+        reader.readAsText(file);
+      });
+
+      /* ── Init ──────────────────────────────────────────── */
+      render();
+
+    })();
+  </script>
+</body>
+</html>
