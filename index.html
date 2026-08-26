@@ -290,6 +290,7 @@
   .col-info1   { min-width: 120px; }
   .col-info2   { min-width: 120px; }
   .col-tag     { width: 100px; }
+  .col-storage { min-width: 150px; }
   .col-actions { width: 88px; }
 
   /* SL number */
@@ -351,6 +352,22 @@
     color: #c4b5fd;
   }
   .tag-pill::before { content: '#'; opacity: 0.5; font-size: 10px; }
+
+  /* storage cell (attached files, table) */
+  .cell-storage { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .storage-file-btn {
+    display: inline-flex; align-items: center; gap: 6px; max-width: 100%;
+    background: rgba(45,212,160,0.08); border: 1px solid rgba(45,212,160,0.25);
+    border-radius: var(--r-xs); padding: 4px 8px; cursor: pointer;
+    font-family: var(--font); color: var(--emerald); font-size: 11px;
+    transition: all var(--trans);
+  }
+  .storage-file-btn:hover { background: rgba(45,212,160,0.16); border-color: rgba(45,212,160,0.45); }
+  .storage-file-btn .file-ico { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.8; }
+  .storage-file-btn .dl-ico   { width: 10px; height: 10px; flex-shrink: 0; opacity: 0.7; }
+  .storage-file-btn .file-name-text {
+    max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
 
   /* action buttons */
   .action-group { display: flex; gap: 6px; }
@@ -539,6 +556,44 @@
   .btn-add-url:hover { border-color: rgba(124,106,255,0.5); background: rgba(124,106,255,0.08); color: var(--violet); }
   .btn-add-url svg { width: 13px; height: 13px; }
 
+  /* File attachments */
+  .file-drop {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    width: 100%; padding: 18px 12px; border-radius: var(--r-sm);
+    border: 1px dashed rgba(124,106,255,0.3); background: rgba(124,106,255,0.03);
+    color: var(--text-muted); font-family: var(--font); font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all var(--trans); text-align: center;
+  }
+  .file-drop:hover, .file-drop.dragover { border-color: rgba(124,106,255,0.6); background: rgba(124,106,255,0.08); color: var(--violet); }
+  .file-drop svg { width: 20px; height: 20px; opacity: 0.8; }
+  .file-drop .file-drop-hint { font-size: 10.5px; color: var(--text-dim); }
+
+  .file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .file-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: var(--r-sm);
+    border: 1px solid var(--glass-b); background: rgba(255,255,255,0.03);
+  }
+  .file-row-ico {
+    width: 28px; height: 28px; flex-shrink: 0; border-radius: var(--r-xs);
+    background: rgba(45,212,160,0.1); border: 1px solid rgba(45,212,160,0.25);
+    display: flex; align-items: center; justify-content: center; color: var(--emerald);
+  }
+  .file-row-ico svg { width: 13px; height: 13px; }
+  .file-row-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+  .file-row-name { font-size: 12.5px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-row-size { font-size: 10.5px; color: var(--text-dim); font-family: var(--mono); }
+  .file-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn-file-dl, .btn-rm-file {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: var(--r-xs);
+    border: 1px solid var(--glass-b); background: var(--glass);
+    cursor: pointer; color: var(--text-dim); transition: all var(--trans);
+  }
+  .btn-file-dl svg, .btn-rm-file svg { width: 11px; height: 11px; }
+  .btn-file-dl:hover { color: var(--cyan); border-color: rgba(6,214,200,0.4); background: rgba(6,214,200,0.08); }
+  .btn-rm-file:hover { color: var(--red); border-color: rgba(255,82,114,0.4); background: rgba(255,82,114,0.08); }
+
   /* modal footer */
   .modal-footer {
     display: flex; justify-content: flex-end; gap: 10px;
@@ -589,7 +644,7 @@
   ══════════════════════════════════════════════════════════ */
   @media (max-width: 800px) {
     .header-inner, .toolbar-inner, .table-wrap { padding-left: 16px; padding-right: 16px; }
-    .col-info2, .col-tag { display: none; }
+    .col-info2, .col-tag, .col-storage { display: none; }
     .field-row { flex-direction: column; }
     .url-col-head, .url-row { grid-template-columns: 90px 1fr 32px; }
     .url-label-inp { font-size: 11px; }
@@ -679,6 +734,7 @@
           <th class="col-tag" data-sort="tag">
             <div class="th-inner">Tag<span class="sort-arrow"></span></div>
           </th>
+          <th class="col-storage">Storage</th>
           <th class="col-actions">Actions</th>
         </tr>
       </thead>
@@ -749,6 +805,19 @@
         <input class="input" type="text" id="inputTag" placeholder="design, dev, reference…"/>
       </div>
 
+      <div class="section-divider">Files</div>
+
+      <!-- File uploads -->
+      <div class="field">
+        <label class="file-drop" id="fileDropZone" for="fileInput">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4-4 4 4M4 16h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Click to upload or drag files here</span>
+          <span class="file-drop-hint">Any file type · stored locally in this browser</span>
+        </label>
+        <input type="file" id="fileInput" multiple style="display:none"/>
+        <div class="file-list" id="fileList"></div>
+      </div>
+
     </div>
 
     <div class="modal-footer">
@@ -780,6 +849,9 @@ const saveLinks = l => localStorage.setItem(STORAGE_KEY, JSON.stringify(l));
 /* ── State ── */
 let links = loadLinks();
 let editingId = null, sortKey = null, sortDir = 1, filterQuery = '', filterTag = '';
+let existingFiles = [];   // [{id,name,size,type}] already stored for the entry being edited
+let removedFileIds = new Set(); // ids of existingFiles marked for removal on save
+let pendingFiles = [];    // [File, ...] newly chosen files not yet stored
 
 /* ── DOM ── */
 const $ = id => document.getElementById(id);
@@ -810,11 +882,78 @@ const errTitle     = $('errTitle');
 const errUrls      = $('errUrls');
 const urlList      = $('urlList');
 const addUrlBtn    = $('addUrlBtn');
+const fileInput    = $('fileInput');
+const fileDropZone = $('fileDropZone');
+const fileList     = $('fileList');
 
 /* ── Utils ── */
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 const isURL = s => { try { new URL(s); return true; } catch { return false; } };
+const formatSize = bytes => {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  if (bytes < 1024*1024*1024) return (bytes/1024/1024).toFixed(1) + ' MB';
+  return (bytes/1024/1024/1024).toFixed(1) + ' GB';
+};
+
+/* ── File storage (IndexedDB — stores the actual file blobs) ── */
+const FILE_DB_NAME = 'linkvault_files_db';
+const FILE_STORE = 'files';
+let _dbPromise = null;
+function openFileDB() {
+  if (_dbPromise) return _dbPromise;
+  _dbPromise = new Promise((resolve, reject) => {
+    const req = indexedDB.open(FILE_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(FILE_STORE)) db.createObjectStore(FILE_STORE, { keyPath: 'id' });
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  return _dbPromise;
+}
+async function idbPutFile(record) {
+  const db = await openFileDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FILE_STORE, 'readwrite');
+    tx.objectStore(FILE_STORE).put(record);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function idbGetFile(id) {
+  const db = await openFileDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FILE_STORE, 'readonly');
+    const req = tx.objectStore(FILE_STORE).get(id);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbDeleteFile(id) {
+  const db = await openFileDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FILE_STORE, 'readwrite');
+    tx.objectStore(FILE_STORE).delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function downloadStoredFile(fileId, filename) {
+  try {
+    const rec = await idbGetFile(fileId);
+    if (!rec || !rec.blob) { showToast('File not found in this browser', 'error'); return; }
+    const url = URL.createObjectURL(rec.blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename || rec.name || 'file';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch {
+    showToast('Download failed', 'error');
+  }
+}
 
 /* ── Toast ── */
 let toastTimer;
@@ -861,6 +1000,65 @@ addUrlBtn.addEventListener('click', () => {
   row.querySelector('.url-inp').focus();
 });
 
+/* ══ FILE ROWS ══ */
+function buildFileRow(name, size, { onDownload, onRemove }) {
+  const row = document.createElement('div');
+  row.className = 'file-row';
+  row.innerHTML = `
+    <div class="file-row-ico"><svg viewBox="0 0 16 16" fill="none"><path d="M4 1.5h5.5L13 5v9.5H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 1.5V5H13" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+    <div class="file-row-body">
+      <div class="file-row-name" title="${esc(name)}">${esc(name)}</div>
+      <div class="file-row-size">${esc(formatSize(size||0))}</div>
+    </div>
+    <div class="file-row-actions"></div>
+  `;
+  const actions = row.querySelector('.file-row-actions');
+  if (onDownload) {
+    const dlBtn = document.createElement('button');
+    dlBtn.type = 'button'; dlBtn.className = 'btn-file-dl'; dlBtn.title = 'Download';
+    dlBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M6 1v6M3.5 5L6 7.5 8.5 5M2 9.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    dlBtn.addEventListener('click', onDownload);
+    actions.appendChild(dlBtn);
+  }
+  const rmBtn = document.createElement('button');
+  rmBtn.type = 'button'; rmBtn.className = 'btn-rm-file'; rmBtn.title = 'Remove';
+  rmBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+  rmBtn.addEventListener('click', onRemove);
+  actions.appendChild(rmBtn);
+  return row;
+}
+
+function renderFileList() {
+  fileList.innerHTML = '';
+  existingFiles.forEach(f => {
+    if (removedFileIds.has(f.id)) return;
+    fileList.appendChild(buildFileRow(f.name, f.size, {
+      onDownload: () => downloadStoredFile(f.id, f.name),
+      onRemove: () => { removedFileIds.add(f.id); renderFileList(); }
+    }));
+  });
+  pendingFiles.forEach((file, idx) => {
+    fileList.appendChild(buildFileRow(file.name, file.size, {
+      onRemove: () => { pendingFiles.splice(idx, 1); renderFileList(); }
+    }));
+  });
+}
+
+function addPendingFiles(fileArr) {
+  [...fileArr].forEach(f => pendingFiles.push(f));
+  renderFileList();
+}
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length) addPendingFiles(fileInput.files);
+  fileInput.value = '';
+});
+['dragover','dragenter'].forEach(evt => fileDropZone.addEventListener(evt, e => { e.preventDefault(); fileDropZone.classList.add('dragover'); }));
+['dragleave','drop'].forEach(evt => fileDropZone.addEventListener(evt, e => { e.preventDefault(); fileDropZone.classList.remove('dragover'); }));
+fileDropZone.addEventListener('drop', e => {
+  if (e.dataTransfer?.files?.length) addPendingFiles(e.dataTransfer.files);
+});
+
 /* ══ MODAL ══ */
 function openModal(entry=null) {
   editingId = entry?.id || null;
@@ -870,12 +1068,19 @@ function openModal(entry=null) {
   inputInfo2.value = entry?.info2 || '';
   inputTag.value   = entry?.tag   || '';
   populateUrlList(entry?.urls);
+  existingFiles = entry?.files ? [...entry.files] : [];
+  removedFileIds = new Set();
+  pendingFiles = [];
+  renderFileList();
   clearErrors();
   modalOverlay.classList.add('open');
   setTimeout(() => inputTitle.focus(), 100);
 }
 
-function closeModal() { modalOverlay.classList.remove('open'); editingId = null; }
+function closeModal() {
+  modalOverlay.classList.remove('open'); editingId = null;
+  existingFiles = []; removedFileIds = new Set(); pendingFiles = [];
+}
 
 function clearErrors() {
   errTitle.textContent = '';
@@ -885,7 +1090,9 @@ function clearErrors() {
 }
 
 /* ══ SAVE ══ */
-function handleSave() {
+let isSaving = false;
+async function handleSave() {
+  if (isSaving) return;
   clearErrors();
   let valid = true;
   const title = inputTitle.value.trim();
@@ -919,19 +1126,53 @@ function handleSave() {
     .map(r => ({ label: r.querySelector('.url-label-inp').value.trim(), url: r.querySelector('.url-inp').value.trim() }))
     .filter(u => u.url);
 
-  if (editingId) {
-    const idx = links.findIndex(l => l.id === editingId);
-    if (idx !== -1) { links[idx] = { ...links[idx], title, urls, info1, info2, tag, updatedAt: Date.now() }; showToast('Link updated ✓'); }
-  } else {
-    links.push({ id: uid(), title, urls, info1, info2, tag, createdAt: Date.now(), updatedAt: Date.now() });
-    showToast('Link saved ✓');
+  isSaving = true;
+  saveBtn.disabled = true;
+  const prevSaveHTML = saveBtn.innerHTML;
+  saveBtn.innerHTML = 'Saving…';
+
+  try {
+    const finalId = editingId || uid();
+
+    // Remove files the user deleted from the modal
+    for (const fid of removedFileIds) {
+      try { await idbDeleteFile(fid); } catch { /* ignore */ }
+    }
+    const keptExisting = existingFiles.filter(f => !removedFileIds.has(f.id));
+
+    // Persist newly attached files into IndexedDB
+    const newFileMeta = [];
+    for (const file of pendingFiles) {
+      const fid = uid();
+      try {
+        await idbPutFile({ id: fid, linkId: finalId, blob: file, name: file.name, type: file.type, size: file.size });
+        newFileMeta.push({ id: fid, name: file.name, type: file.type, size: file.size });
+      } catch {
+        showToast(`Couldn't store "${file.name}"`, 'error');
+      }
+    }
+    const files = [...keptExisting, ...newFileMeta];
+
+    if (editingId) {
+      const idx = links.findIndex(l => l.id === editingId);
+      if (idx !== -1) { links[idx] = { ...links[idx], title, urls, info1, info2, tag, files, updatedAt: Date.now() }; showToast('Link updated ✓'); }
+    } else {
+      links.push({ id: finalId, title, urls, info1, info2, tag, files, createdAt: Date.now(), updatedAt: Date.now() });
+      showToast('Link saved ✓');
+    }
+    saveLinks(links); closeModal(); render();
+  } finally {
+    isSaving = false;
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = prevSaveHTML;
   }
-  saveLinks(links); closeModal(); render();
 }
 
 /* ── Delete ── */
 function handleDelete(id) {
-  if (!confirm('Delete this entry?')) return;
+  if (!confirm('Delete this entry? Any attached files will also be removed.')) return;
+  const entry = links.find(l => l.id === id);
+  (entry?.files || []).forEach(f => { idbDeleteFile(f.id).catch(() => {}); });
   links = links.filter(l => l.id !== id);
   saveLinks(links); render();
   showToast('Entry deleted', 'error');
@@ -991,6 +1232,22 @@ function renderLinksCell(urls) {
   h+='</div>'; return h;
 }
 
+/* ── Storage cell ── */
+function renderStorageCell(files) {
+  if (!files||!files.length) return '<span class="dash">—</span>';
+  const MAX=2, shown=files.slice(0,MAX), rest=files.length-MAX;
+  let h='<div class="cell-storage">';
+  shown.forEach(f=>{
+    h+=`<button type="button" class="storage-file-btn" data-file-id="${esc(f.id)}" data-file-name="${esc(f.name)}" title="Download ${esc(f.name)} (${esc(formatSize(f.size||0))})">
+      <svg class="file-ico" viewBox="0 0 12 12" fill="none"><path d="M3 1h4l2 2v8H3z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
+      <span class="file-name-text">${esc(f.name)}</span>
+      <svg class="dl-ico" viewBox="0 0 12 12" fill="none"><path d="M6 1v6M3.5 5L6 7.5 8.5 5M2 9.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>`;
+  });
+  if (rest>0) h+=`<span class="more-badge">+${rest} more</span>`;
+  h+='</div>'; return h;
+}
+
 /* ── Render ── */
 function render() {
   refreshTagFilter();
@@ -1028,6 +1285,7 @@ function render() {
       <td class="col-info1"><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1)||'<span class="dash">—</span>'}</div></td>
       <td class="col-info2"><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2)||'<span class="dash">—</span>'}</div></td>
       <td class="col-tag">${e.tag?`<span class="tag-pill">${esc(e.tag)}</span>`:'<span class="dash">—</span>'}</td>
+      <td class="col-storage">${renderStorageCell(e.files)}</td>
       <td class="col-actions">
         <div class="action-group">
           <button class="btn-action edit" data-id="${esc(e.id)}" title="Edit">
@@ -1046,14 +1304,17 @@ function render() {
 function migrate() {
   let changed=false;
   links=links.map(l=>{ if(!l.urls){ changed=true; return {...l, urls:l.url?[{label:'',url:l.url}]:[]}; } return l; });
+  links=links.map(l=>{ if(!l.files){ changed=true; return {...l, files:[]}; } return l; });
   if(changed) saveLinks(links);
 }
 
 /* ── Events ── */
 tableBody.addEventListener('click', e=>{
   const eb=e.target.closest('.btn-action.edit'), db=e.target.closest('.btn-action.del');
+  const fb=e.target.closest('.storage-file-btn');
   if(eb){ const en=links.find(l=>l.id===eb.dataset.id); if(en) openModal(en); }
   if(db) handleDelete(db.dataset.id);
+  if(fb) downloadStoredFile(fb.dataset.fileId, fb.dataset.fileName);
 });
 document.querySelectorAll('.link-table th[data-sort]').forEach(th=>th.addEventListener('click',()=>handleSort(th.dataset.sort)));
 searchInput.addEventListener('input',()=>{ filterQuery=searchInput.value.trim(); render(); });
