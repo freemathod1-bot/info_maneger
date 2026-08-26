@@ -485,7 +485,7 @@
         }
 
         .link-table th {
-            padding: 13px 16px;
+            padding: 13px 12px;
             text-align: left;
             font-size: 10.5px;
             font-weight: 600;
@@ -517,7 +517,7 @@
         }
 
         .link-table td {
-            padding: 14px 16px;
+            padding: 12px 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
             vertical-align: middle;
             font-size: 13px;
@@ -553,37 +553,47 @@
             opacity: 1;
         }
 
-        /* columns */
+        /* columns - tightly packed ("near by near") dynamically sizing by title length */
         .col-sl {
-            width: 52px;
+            width: 1%;
+            white-space: nowrap;
+            padding-left: 18px;
         }
 
         .col-title {
-            min-width: 220px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .col-link {
-            min-width: 200px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .col-info1 {
-            min-width: 120px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .col-info2 {
-            min-width: 120px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .col-tag {
-            width: 100px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .col-storage {
-            min-width: 140px;
+            width: 1%;
+            white-space: nowrap;
         }
 
         .col-actions {
-            width: 88px;
+            width: auto;
+            white-space: nowrap;
+            padding-right: 18px;
         }
 
         /* SL number */
@@ -604,7 +614,8 @@
             font-weight: 600;
             font-size: 13.5px;
             color: var(--text);
-            max-width: 70ch;
+            max-width: 48ch;
+            width: max-content;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -615,6 +626,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            width: max-content;
         }
 
         .cell-link-row {
@@ -683,6 +695,7 @@
             color: var(--text-muted);
             font-size: 12.5px;
             max-width: 160px;
+            width: max-content;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
