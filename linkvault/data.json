@@ -6,6 +6,10 @@
       {
         "label": "",
         "url": "https://github.com/ytbro8326-sudo/tmdb_imdb_id_with_movie_server_extractor"
+      },
+      {
+        "label": "tmdb collect from wiki",
+        "url": "https://github.com/ytbro8326-sudo/tmdb_id_collector_from_wikipedia_verify"
       }
     ],
     "info1": "it also extrat tmdb id from wiki data title matching",
@@ -13,6 +17,6 @@
     "tag": "",
     "files": [],
     "createdAt": 1787711676894,
-    "updatedAt": 1787711676894
+    "updatedAt": 1787711760965
   }
 ]
