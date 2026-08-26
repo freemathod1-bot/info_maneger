@@ -138,5 +138,21 @@
     "files": [],
     "createdAt": 1787719588253,
     "updatedAt": 1787719588253
+  },
+  {
+    "id": "mt9m6ktr28azt",
+    "title": "primsrc me media steam links extractor by flaresover",
+    "urls": [
+      {
+        "label": "git repo",
+        "url": "https://github.com/ytbro8326-sudo/primesrc_single_flaresolver"
+      }
+    ],
+    "info1": "this is use flaresovler to extract media from https://primesrc.me/embed/movie?tmdb=1415800",
+    "info2": "",
+    "tag": "",
+    "files": [],
+    "createdAt": 1787719751919,
+    "updatedAt": 1787719751919
   }
 ]
