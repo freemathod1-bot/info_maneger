@@ -1,1641 +1,2596 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="LinkVault — save and organise your links beautifully."/>
-  <title>LinkVault</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  <style>
-  /* ══════════════════════════════════════════════════════════
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="LinkVault — save and organise your links beautifully." />
+    <title>LinkVault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ══════════════════════════════════════════════════════════
      RESET
   ══════════════════════════════════════════════════════════ */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        /* ══════════════════════════════════════════════════════════
      TOKENS
   ══════════════════════════════════════════════════════════ */
-  :root {
-    --bg:          #060810;
-    --glass:       rgba(255,255,255,0.035);
-    --glass-hover: rgba(255,255,255,0.06);
-    --glass-b:     rgba(255,255,255,0.07);
-    --glass-b2:    rgba(255,255,255,0.12);
-    --surface:     #0c0e18;
-    --surface2:    #111424;
+        :root {
+            --bg: #060810;
+            --glass: rgba(255, 255, 255, 0.035);
+            --glass-hover: rgba(255, 255, 255, 0.06);
+            --glass-b: rgba(255, 255, 255, 0.07);
+            --glass-b2: rgba(255, 255, 255, 0.12);
+            --surface: #0c0e18;
+            --surface2: #111424;
 
-    /* aurora palette */
-    --violet:      #7c6aff;
-    --indigo:      #4f6ef7;
-    --cyan:        #06d6c8;
-    --pink:        #f04f8a;
-    --amber:       #f5a623;
-    --emerald:     #2dd4a0;
-    --red:         #ff5272;
+            /* aurora palette */
+            --violet: #7c6aff;
+            --indigo: #4f6ef7;
+            --cyan: #06d6c8;
+            --pink: #f04f8a;
+            --amber: #f5a623;
+            --emerald: #2dd4a0;
+            --red: #ff5272;
 
-    /* gradient accent */
-    --grad:        linear-gradient(135deg, var(--violet), var(--cyan));
-    --grad-text:   linear-gradient(135deg, #a78bfa, #38e8d8);
-    --grad-btn:    linear-gradient(135deg, #6d58f0, #06d6c8);
+            /* gradient accent */
+            --grad: linear-gradient(135deg, var(--violet), var(--cyan));
+            --grad-text: linear-gradient(135deg, #a78bfa, #38e8d8);
+            --grad-btn: linear-gradient(135deg, #6d58f0, #06d6c8);
 
-    --text:        #eef0f8;
-    --text-muted:  #7880a4;
-    --text-dim:    #404669;
+            --text: #eef0f8;
+            --text-muted: #7880a4;
+            --text-dim: #404669;
 
-    --font:  'Inter', system-ui, sans-serif;
-    --mono:  'JetBrains Mono', monospace;
+            --font: 'Inter', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
 
-    --r:     14px;
-    --r-sm:  8px;
-    --r-xs:  5px;
-    --trans: 0.2s cubic-bezier(.4,0,.2,1);
-    --shadow-lg: 0 24px 80px rgba(0,0,0,0.7);
-    --shadow-md: 0 8px 32px rgba(0,0,0,0.5);
-    --shadow-sm: 0 2px 12px rgba(0,0,0,0.4);
-  }
+            --r: 14px;
+            --r-sm: 8px;
+            --r-xs: 5px;
+            --trans: 0.2s cubic-bezier(.4, 0, .2, 1);
+            --shadow-lg: 0 24px 80px rgba(0, 0, 0, 0.7);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.4);
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        /* ══════════════════════════════════════════════════════════
      BASE
   ══════════════════════════════════════════════════════════ */
-  html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
-    line-height: 1.55;
-    overflow-x: hidden;
-  }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.55;
+            overflow-x: hidden;
+        }
 
-  /* ── Ambient orbs ── */
-  body::before, body::after {
-    content: '';
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  body::before {
-    width: 600px; height: 600px;
-    top: -200px; left: -150px;
-    background: radial-gradient(circle, rgba(124,106,255,0.18) 0%, transparent 70%);
-    animation: drift1 20s ease-in-out infinite alternate;
-  }
-  body::after {
-    width: 500px; height: 500px;
-    bottom: -150px; right: -100px;
-    background: radial-gradient(circle, rgba(6,214,200,0.14) 0%, transparent 70%);
-    animation: drift2 18s ease-in-out infinite alternate;
-  }
+        /* ── Ambient orbs ── */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-  @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(60px,40px) scale(1.1); } }
-  @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-50px,-30px) scale(1.08); } }
+        body::before {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -150px;
+            background: radial-gradient(circle, rgba(124, 106, 255, 0.18) 0%, transparent 70%);
+            animation: drift1 20s ease-in-out infinite alternate;
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        body::after {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            right: -100px;
+            background: radial-gradient(circle, rgba(6, 214, 200, 0.14) 0%, transparent 70%);
+            animation: drift2 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift1 {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+
+            to {
+                transform: translate(60px, 40px) scale(1.1);
+            }
+        }
+
+        @keyframes drift2 {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
+
+            to {
+                transform: translate(-50px, -30px) scale(1.08);
+            }
+        }
+
+        /* ══════════════════════════════════════════════════════════
      HEADER
   ══════════════════════════════════════════════════════════ */
-  .app-header {
-    position: sticky; top: 0; z-index: 200;
-    background: rgba(6,8,16,0.75);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-bottom: 1px solid var(--glass-b);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.04);
-  }
-  .header-inner {
-    max-width: 1280px; margin: 0 auto; padding: 16px 28px;
-    display: flex; align-items: center; justify-content: space-between; gap: 20px;
-  }
-  .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
-  .logo-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--grad-btn);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 20px rgba(124,106,255,0.45), 0 0 40px rgba(6,214,200,0.2);
-    font-size: 17px; flex-shrink: 0;
-  }
-  .logo-text {
-    font-size: 17px; font-weight: 700; letter-spacing: -0.4px;
-    background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .logo-version {
-    font-size: 10px; font-weight: 500; color: var(--text-dim);
-    background: var(--glass); border: 1px solid var(--glass-b);
-    padding: 2px 7px; border-radius: 99px; font-family: var(--mono);
-  }
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: rgba(6, 8, 16, 0.75);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 1px solid var(--glass-b);
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
 
-  .header-right { display: flex; align-items: center; gap: 10px; }
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-  .count-badge {
-    font-family: var(--mono); font-size: 11px; font-weight: 500;
-    color: var(--text-muted); background: var(--glass);
-    border: 1px solid var(--glass-b); padding: 5px 12px; border-radius: 99px;
-    white-space: nowrap;
-  }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            text-decoration: none;
+        }
 
-  /* sync status badge */
-  .sync-badge {
-    display: inline-flex; align-items: center; gap: 7px;
-    font-family: var(--font); font-size: 11.5px; font-weight: 500;
-    color: var(--text-muted); background: var(--glass);
-    border: 1px solid var(--glass-b); padding: 6px 12px; border-radius: 99px;
-    white-space: nowrap; cursor: pointer; transition: all var(--trans);
-  }
-  .sync-badge:hover { border-color: var(--glass-b2); background: var(--glass-hover); }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
-  .sync-badge.ok     .sync-dot { background: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
-  .sync-badge.syncing .sync-dot { background: var(--amber); box-shadow: 0 0 8px var(--amber); animation: syncPulse 1s ease-in-out infinite; }
-  .sync-badge.error  .sync-dot { background: var(--red); box-shadow: 0 0 8px var(--red); }
-  @keyframes syncPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--grad-btn);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(124, 106, 255, 0.45), 0 0 40px rgba(6, 214, 200, 0.2);
+            font-size: 17px;
+            flex-shrink: 0;
+        }
 
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 9px 20px; border: none; border-radius: var(--r-sm);
-    font-family: var(--font); font-size: 13px; font-weight: 600;
-    color: #fff; cursor: pointer; white-space: nowrap;
-    background: var(--grad-btn);
-    box-shadow: 0 0 20px rgba(124,106,255,0.35), 0 4px 16px rgba(0,0,0,0.4);
-    transition: transform var(--trans), box-shadow var(--trans), filter var(--trans);
-    position: relative; overflow: hidden;
-  }
-  .btn-primary::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
-    pointer-events: none;
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 32px rgba(124,106,255,0.5), 0 8px 24px rgba(0,0,0,0.4);
-    filter: brightness(1.08);
-  }
-  .btn-primary:active { transform: translateY(0); }
-  .btn-primary svg { width: 14px; height: 14px; }
+        .logo-text {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+            background: var(--grad-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        .logo-version {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            padding: 2px 7px;
+            border-radius: 99px;
+            font-family: var(--mono);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .count-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            padding: 5px 12px;
+            border-radius: 99px;
+            white-space: nowrap;
+        }
+
+        /* sync status badge */
+        .sync-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: var(--font);
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            padding: 6px 12px;
+            border-radius: 99px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--trans);
+        }
+
+        .sync-badge:hover {
+            border-color: var(--glass-b2);
+            background: var(--glass-hover);
+        }
+
+        .sync-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .sync-badge.ok .sync-dot {
+            background: var(--emerald);
+            box-shadow: 0 0 8px var(--emerald);
+        }
+
+        .sync-badge.syncing .sync-dot {
+            background: var(--amber);
+            box-shadow: 0 0 8px var(--amber);
+            animation: syncPulse 1s ease-in-out infinite;
+        }
+
+        .sync-badge.error .sync-dot {
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red);
+        }
+
+        @keyframes syncPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 20px;
+            border: none;
+            border-radius: var(--r-sm);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            white-space: nowrap;
+            background: var(--grad-btn);
+            box-shadow: 0 0 20px rgba(124, 106, 255, 0.35), 0 4px 16px rgba(0, 0, 0, 0.4);
+            transition: transform var(--trans), box-shadow var(--trans), filter var(--trans);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent);
+            pointer-events: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 32px rgba(124, 106, 255, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+            filter: brightness(1.08);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ══════════════════════════════════════════════════════════
      TOOLBAR
   ══════════════════════════════════════════════════════════ */
-  .toolbar {
-    background: rgba(8,10,20,0.6);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--glass-b);
-  }
-  .toolbar-inner {
-    max-width: 1280px; margin: 0 auto; padding: 12px 28px;
-    display: flex; align-items: center; gap: 10px;
-  }
+        .toolbar {
+            background: rgba(8, 10, 20, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-b);
+        }
 
-  /* search */
-  .search-wrap { flex: 1; position: relative; min-width: 0; }
-  .search-icon {
-    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
-    width: 15px; height: 15px; color: var(--text-dim); pointer-events: none;
-  }
-  .search-input {
-    width: 100%; padding: 10px 14px 10px 38px;
-    background: var(--glass); border: 1px solid var(--glass-b);
-    border-radius: var(--r-sm); color: var(--text); font-family: var(--font);
-    font-size: 13px; outline: none;
-    transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
-  }
-  .search-input:focus {
-    border-color: rgba(124,106,255,0.5);
-    background: rgba(124,106,255,0.05);
-    box-shadow: 0 0 0 3px rgba(124,106,255,0.1);
-  }
-  .search-input::placeholder { color: var(--text-dim); }
+        .toolbar-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  /* selects & icon buttons */
-  .filter-select {
-    padding: 10px 12px; background: var(--glass); border: 1px solid var(--glass-b);
-    border-radius: var(--r-sm); color: var(--text); font-family: var(--font);
-    font-size: 13px; outline: none; cursor: pointer;
-    transition: border-color var(--trans);
-  }
-  .filter-select:focus { border-color: rgba(124,106,255,0.5); }
+        /* search */
+        .search-wrap {
+            flex: 1;
+            position: relative;
+            min-width: 0;
+        }
 
-  .icon-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 38px; height: 38px; background: var(--glass);
-    border: 1px solid var(--glass-b); border-radius: var(--r-sm);
-    cursor: pointer; color: var(--text-muted); flex-shrink: 0;
-    transition: color var(--trans), border-color var(--trans), background var(--trans), box-shadow var(--trans);
-  }
-  .icon-btn:hover {
-    color: var(--cyan); border-color: rgba(6,214,200,0.35);
-    background: rgba(6,214,200,0.06);
-    box-shadow: 0 0 12px rgba(6,214,200,0.15);
-  }
-  .icon-btn svg { width: 15px; height: 15px; }
+        .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            color: var(--text-dim);
+            pointer-events: none;
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 13px;
+            outline: none;
+            transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
+        }
+
+        .search-input:focus {
+            border-color: rgba(124, 106, 255, 0.5);
+            background: rgba(124, 106, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(124, 106, 255, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        /* selects & icon buttons */
+        .filter-select {
+            padding: 10px 12px;
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color var(--trans);
+        }
+
+        .filter-select:focus {
+            border-color: rgba(124, 106, 255, 0.5);
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+            cursor: pointer;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: color var(--trans), border-color var(--trans), background var(--trans), box-shadow var(--trans);
+        }
+
+        .icon-btn:hover {
+            color: var(--cyan);
+            border-color: rgba(6, 214, 200, 0.35);
+            background: rgba(6, 214, 200, 0.06);
+            box-shadow: 0 0 12px rgba(6, 214, 200, 0.15);
+        }
+
+        .icon-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ══════════════════════════════════════════════════════════
      TABLE WRAPPER
   ══════════════════════════════════════════════════════════ */
-  .table-wrap {
-    max-width: 1280px; margin: 32px auto 80px; padding: 0 28px;
-  }
+        .table-wrap {
+            max-width: 1280px;
+            margin: 32px auto 80px;
+            padding: 0 28px;
+        }
 
-  /* stats bar */
-  .stats-bar {
-    display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
-    padding: 10px 18px;
-    background: var(--glass); border: 1px solid var(--glass-b);
-    border-radius: var(--r-sm);
-  }
-  .stat-item { display: flex; align-items: center; gap: 6px; }
-  .stat-dot  { width: 6px; height: 6px; border-radius: 50%; background: var(--grad-btn); }
-  .stat-label { font-size: 12px; color: var(--text-muted); }
-  .stat-val   { font-size: 12px; font-weight: 600; color: var(--text); font-family: var(--mono); }
+        /* stats bar */
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 10px 18px;
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+        }
 
-  /* table card */
-  .table-card {
-    background: linear-gradient(180deg, rgba(17,20,36,0.9) 0%, rgba(12,14,24,0.95) 100%);
-    border: 1px solid var(--glass-b);
-    border-radius: var(--r);
-    overflow: hidden;
-    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.05);
-  }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-  .link-table { width: 100%; border-collapse: collapse; }
+        .stat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--grad-btn);
+        }
 
-  .link-table thead {
-    background: rgba(255,255,255,0.025);
-    border-bottom: 1px solid var(--glass-b);
-  }
-  .link-table th {
-    padding: 13px 16px; text-align: left;
-    font-size: 10.5px; font-weight: 600; letter-spacing: 0.8px;
-    text-transform: uppercase; color: var(--text-dim);
-    white-space: nowrap; user-select: none;
-  }
-  .link-table th[data-sort] { cursor: pointer; transition: color var(--trans); }
-  .link-table th[data-sort]:hover { color: var(--violet); }
-  .th-inner { display: inline-flex; align-items: center; gap: 4px; }
-  .sort-arrow { font-size: 10px; opacity: 0.7; }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
 
-  .link-table td {
-    padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.04);
-    vertical-align: middle; font-size: 13px;
-  }
+        .stat-val {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            font-family: var(--mono);
+        }
 
-  /* row hover glow (attached to first cell, NOT the <tr>, so the
+        /* table card */
+        .table-card {
+            background: linear-gradient(180deg, rgba(17, 20, 36, 0.9) 0%, rgba(12, 14, 24, 0.95) 100%);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r);
+            overflow: hidden;
+            box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .link-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .link-table thead {
+            background: rgba(255, 255, 255, 0.025);
+            border-bottom: 1px solid var(--glass-b);
+        }
+
+        .link-table th {
+            padding: 13px 16px;
+            text-align: left;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .link-table th[data-sort] {
+            cursor: pointer;
+            transition: color var(--trans);
+        }
+
+        .link-table th[data-sort]:hover {
+            color: var(--violet);
+        }
+
+        .th-inner {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sort-arrow {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .link-table td {
+            padding: 14px 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle;
+            font-size: 13px;
+        }
+
+        /* row hover glow (attached to first cell, NOT the <tr>, so the
      table's auto column-width algorithm never gets thrown off) */
-  .link-table tbody tr {
-    transition: background var(--trans);
-  }
-  .link-table tbody tr td:first-child {
-    position: relative;
-  }
-  .link-table tbody tr td:first-child::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: var(--grad);
-    opacity: 0; transition: opacity var(--trans);
-  }
-  .link-table tbody tr:hover { background: var(--glass-hover); }
-  .link-table tbody tr:hover td:first-child::before { opacity: 1; }
+        .link-table tbody tr {
+            transition: background var(--trans);
+        }
 
-  /* columns */
-  .col-sl      { width: 52px; }
-  .col-title   { min-width: 160px; }
-  .col-link    { min-width: 220px; }
-  .col-info1   { min-width: 120px; }
-  .col-info2   { min-width: 120px; }
-  .col-tag     { width: 100px; }
-  .col-storage { min-width: 150px; }
-  .col-actions { width: 88px; }
+        .link-table tbody tr td:first-child {
+            position: relative;
+        }
 
-  /* SL number */
-  .sl-num {
-    font-family: var(--mono); font-size: 11px; font-weight: 500;
-    color: var(--text-dim);
-    background: var(--glass); border: 1px solid var(--glass-b);
-    padding: 3px 7px; border-radius: var(--r-xs);
-    display: inline-block;
-  }
+        .link-table tbody tr td:first-child::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--grad);
+            opacity: 0;
+            transition: opacity var(--trans);
+        }
 
-  /* title */
-  .cell-title {
-    font-weight: 600; font-size: 13.5px; color: var(--text);
-    max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
+        .link-table tbody tr:hover {
+            background: var(--glass-hover);
+        }
 
-  /* multi-link cell */
-  .cell-links { display: flex; flex-direction: column; gap: 6px; }
-  .cell-link-row {
-    display: flex; align-items: center; gap: 6px;
-    max-width: 280px;
-  }
-  .cell-link-row a {
-    display: flex; align-items: center; gap: 6px;
-    font-family: var(--mono); font-size: 11px;
-    color: var(--indigo); text-decoration: none;
-    transition: color var(--trans);
-    min-width: 0;
-  }
-  .cell-link-row a:hover { color: var(--cyan); }
-  .link-ext-icon { width: 10px; height: 10px; flex-shrink: 0; opacity: 0.5; }
-  .link-badge {
-    font-family: var(--font); font-size: 9.5px; font-weight: 600;
-    letter-spacing: 0.3px; color: var(--violet);
-    background: rgba(124,106,255,0.12); border: 1px solid rgba(124,106,255,0.25);
-    border-radius: var(--r-xs); padding: 1px 6px; white-space: nowrap; flex-shrink: 0;
-  }
-  .link-url-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .more-badge {
-    font-family: var(--mono); font-size: 10px; color: var(--text-dim);
-    background: var(--glass); border: 1px solid var(--glass-b);
-    border-radius: var(--r-xs); padding: 1px 7px; display: inline-block;
-  }
+        .link-table tbody tr:hover td:first-child::before {
+            opacity: 1;
+        }
 
-  /* info */
-  .cell-info {
-    color: var(--text-muted); font-size: 12.5px;
-    max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
+        /* columns */
+        .col-sl {
+            width: 52px;
+        }
 
-  /* tag */
-  .tag-pill {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.2px; white-space: nowrap;
-    padding: 3px 10px; border-radius: 99px;
-    background: linear-gradient(135deg, rgba(124,106,255,0.15), rgba(6,214,200,0.12));
-    border: 1px solid rgba(124,106,255,0.3);
-    color: #c4b5fd;
-  }
-  .tag-pill::before { content: '#'; opacity: 0.5; font-size: 10px; }
+        .col-title {
+            min-width: 160px;
+        }
 
-  /* storage cell (attached files, table) */
-  .cell-storage { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
-  .storage-file-btn {
-    display: inline-flex; align-items: center; gap: 6px; max-width: 100%;
-    background: rgba(45,212,160,0.08); border: 1px solid rgba(45,212,160,0.25);
-    border-radius: var(--r-xs); padding: 4px 8px; cursor: pointer;
-    font-family: var(--font); color: var(--emerald); font-size: 11px;
-    transition: all var(--trans);
-  }
-  .storage-file-btn:hover { background: rgba(45,212,160,0.16); border-color: rgba(45,212,160,0.45); }
-  .storage-file-btn .file-ico { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.8; }
-  .storage-file-btn .dl-ico   { width: 10px; height: 10px; flex-shrink: 0; opacity: 0.7; }
-  .storage-file-btn .file-name-text {
-    max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
+        .col-link {
+            min-width: 220px;
+        }
 
-  /* action buttons */
-  .action-group { display: flex; gap: 6px; }
-  .btn-action {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 32px; height: 32px; border-radius: var(--r-xs);
-    border: 1px solid var(--glass-b); background: var(--glass);
-    cursor: pointer; transition: all var(--trans);
-    color: var(--text-dim);
-  }
-  .btn-action svg { width: 13px; height: 13px; }
-  .btn-action.edit:hover  { color: var(--amber); border-color: rgba(245,166,35,0.4); background: rgba(245,166,35,0.08); box-shadow: 0 0 10px rgba(245,166,35,0.15); }
-  .btn-action.del:hover   { color: var(--red);   border-color: rgba(255,82,114,0.4); background: rgba(255,82,114,0.08); box-shadow: 0 0 10px rgba(255,82,114,0.15); }
+        .col-info1 {
+            min-width: 120px;
+        }
 
-  /* dash for empty cells */
-  .dash { color: var(--text-dim); font-size: 12px; }
+        .col-info2 {
+            min-width: 120px;
+        }
 
-  /* ── Empty state ── */
-  .empty-state {
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    padding: 90px 24px; gap: 16px; text-align: center;
-  }
-  .empty-state.visible { display: flex; }
-  .empty-orb {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: linear-gradient(135deg, rgba(124,106,255,0.15), rgba(6,214,200,0.1));
-    border: 1px solid var(--glass-b);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px; margin-bottom: 4px;
-    box-shadow: 0 0 40px rgba(124,106,255,0.15);
-  }
-  .empty-title { font-size: 16px; font-weight: 600; color: var(--text); }
-  .empty-sub   { font-size: 13px; color: var(--text-muted); max-width: 280px; line-height: 1.6; }
+        .col-tag {
+            width: 100px;
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        .col-storage {
+            min-width: 150px;
+        }
+
+        .col-actions {
+            width: 88px;
+        }
+
+        /* SL number */
+        .sl-num {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            padding: 3px 7px;
+            border-radius: var(--r-xs);
+            display: inline-block;
+        }
+
+        /* title */
+        .cell-title {
+            font-weight: 600;
+            font-size: 13.5px;
+            color: var(--text);
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* multi-link cell */
+        .cell-links {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .cell-link-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            max-width: 280px;
+        }
+
+        .cell-link-row a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--indigo);
+            text-decoration: none;
+            transition: color var(--trans);
+            min-width: 0;
+        }
+
+        .cell-link-row a:hover {
+            color: var(--cyan);
+        }
+
+        .link-ext-icon {
+            width: 10px;
+            height: 10px;
+            flex-shrink: 0;
+            opacity: 0.5;
+        }
+
+        .link-badge {
+            font-family: var(--font);
+            font-size: 9.5px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: var(--violet);
+            background: rgba(124, 106, 255, 0.12);
+            border: 1px solid rgba(124, 106, 255, 0.25);
+            border-radius: var(--r-xs);
+            padding: 1px 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .link-url-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .more-badge {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-dim);
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-xs);
+            padding: 1px 7px;
+            display: inline-block;
+        }
+
+        /* info */
+        .cell-info {
+            color: var(--text-muted);
+            font-size: 12.5px;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* tag */
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            padding: 3px 10px;
+            border-radius: 99px;
+            background: linear-gradient(135deg, rgba(124, 106, 255, 0.15), rgba(6, 214, 200, 0.12));
+            border: 1px solid rgba(124, 106, 255, 0.3);
+            color: #c4b5fd;
+        }
+
+        .tag-pill::before {
+            content: '#';
+            opacity: 0.5;
+            font-size: 10px;
+        }
+
+        /* storage cell (attached files, table) */
+        .cell-storage {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+        }
+
+        .storage-file-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            max-width: 100%;
+            background: rgba(45, 212, 160, 0.08);
+            border: 1px solid rgba(45, 212, 160, 0.25);
+            border-radius: var(--r-xs);
+            padding: 4px 8px;
+            cursor: pointer;
+            font-family: var(--font);
+            color: var(--emerald);
+            font-size: 11px;
+            transition: all var(--trans);
+        }
+
+        .storage-file-btn:hover {
+            background: rgba(45, 212, 160, 0.16);
+            border-color: rgba(45, 212, 160, 0.45);
+        }
+
+        .storage-file-btn .file-ico {
+            width: 11px;
+            height: 11px;
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        .storage-file-btn .dl-ico {
+            width: 10px;
+            height: 10px;
+            flex-shrink: 0;
+            opacity: 0.7;
+        }
+
+        .storage-file-btn .file-name-text {
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* action buttons */
+        .action-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--r-xs);
+            border: 1px solid var(--glass-b);
+            background: var(--glass);
+            cursor: pointer;
+            transition: all var(--trans);
+            color: var(--text-dim);
+        }
+
+        .btn-action svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .btn-action.edit:hover {
+            color: var(--amber);
+            border-color: rgba(245, 166, 35, 0.4);
+            background: rgba(245, 166, 35, 0.08);
+            box-shadow: 0 0 10px rgba(245, 166, 35, 0.15);
+        }
+
+        .btn-action.del:hover {
+            color: var(--red);
+            border-color: rgba(255, 82, 114, 0.4);
+            background: rgba(255, 82, 114, 0.08);
+            box-shadow: 0 0 10px rgba(255, 82, 114, 0.15);
+        }
+
+        /* dash for empty cells */
+        .dash {
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        /* ── Empty state ── */
+        .empty-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 90px 24px;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .empty-state.visible {
+            display: flex;
+        }
+
+        .empty-orb {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(124, 106, 255, 0.15), rgba(6, 214, 200, 0.1));
+            border: 1px solid var(--glass-b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 4px;
+            box-shadow: 0 0 40px rgba(124, 106, 255, 0.15);
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .empty-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            max-width: 280px;
+            line-height: 1.6;
+        }
+
+        /* ══════════════════════════════════════════════════════════
      MODAL
   ══════════════════════════════════════════════════════════ */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 400;
-    display: flex; align-items: center; justify-content: center; padding: 20px;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
 
-  .modal {
-    width: 100%; max-width: 560px; max-height: 90vh;
-    background: linear-gradient(160deg, #12152a 0%, #0c0e1c 100%);
-    border: 1px solid var(--glass-b2);
-    border-radius: calc(var(--r) + 4px);
-    box-shadow: var(--shadow-lg), 0 0 80px rgba(124,106,255,0.12);
-    display: flex; flex-direction: column;
-    transform: translateY(20px) scale(0.97);
-    transition: transform 0.28s cubic-bezier(.34,1.56,.64,1), opacity 0.25s ease;
-  }
-  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
 
-  /* accent top bar */
-  .modal-accent {
-    height: 3px; width: 100%;
-    background: var(--grad-btn);
-    border-radius: calc(var(--r) + 4px) calc(var(--r) + 4px) 0 0;
-    flex-shrink: 0;
-  }
+        .modal {
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            background: linear-gradient(160deg, #12152a 0%, #0c0e1c 100%);
+            border: 1px solid var(--glass-b2);
+            border-radius: calc(var(--r) + 4px);
+            box-shadow: var(--shadow-lg), 0 0 80px rgba(124, 106, 255, 0.12);
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.28s cubic-bezier(.34, 1.56, .64, 1), opacity 0.25s ease;
+        }
 
-  .modal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 24px 16px; flex-shrink: 0;
-    border-bottom: 1px solid var(--glass-b);
-  }
-  .modal-title-wrap {}
-  .modal-title {
-    font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text);
-  }
-  .modal-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .modal-overlay.open .modal {
+            transform: translateY(0) scale(1);
+        }
 
-  .btn-close {
-    width: 30px; height: 30px; border-radius: 50%;
-    border: 1px solid var(--glass-b); background: var(--glass);
-    color: var(--text-dim); cursor: pointer; font-size: 14px;
-    display: flex; align-items: center; justify-content: center;
-    transition: color var(--trans), background var(--trans), border-color var(--trans);
-  }
-  .btn-close:hover { color: var(--text); background: var(--glass-hover); border-color: var(--glass-b2); }
+        /* accent top bar */
+        .modal-accent {
+            height: 3px;
+            width: 100%;
+            background: var(--grad-btn);
+            border-radius: calc(var(--r) + 4px) calc(var(--r) + 4px) 0 0;
+            flex-shrink: 0;
+        }
 
-  .modal-body {
-    padding: 20px 24px; display: flex; flex-direction: column;
-    gap: 16px; overflow-y: auto;
-  }
-  /* custom scrollbar inside modal */
-  .modal-body::-webkit-scrollbar { width: 4px; }
-  .modal-body::-webkit-scrollbar-track { background: transparent; }
-  .modal-body::-webkit-scrollbar-thumb { background: var(--glass-b2); border-radius: 99px; }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px 16px;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--glass-b);
+        }
 
-  /* form field */
-  .field { display: flex; flex-direction: column; gap: 7px; flex: 1; }
-  .field-label {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.6px;
-    text-transform: uppercase; color: var(--text-muted);
-    display: flex; align-items: center; gap: 6px;
-  }
-  .req { color: var(--pink); font-size: 13px; line-height: 1; }
-  .field-hint { font-size: 10.5px; color: var(--text-dim); margin-top: -3px; }
+        .modal-title-wrap {}
 
-  .input {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--glass-b);
-    border-radius: var(--r-sm); color: var(--text); font-family: var(--font);
-    font-size: 13px; padding: 10px 13px; outline: none; width: 100%;
-    transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
-  }
-  .input:focus {
-    border-color: rgba(124,106,255,0.55);
-    background: rgba(124,106,255,0.06);
-    box-shadow: 0 0 0 3px rgba(124,106,255,0.1);
-  }
-  .input::placeholder { color: var(--text-dim); }
-  .input.err { border-color: rgba(255,82,114,0.6); box-shadow: 0 0 0 3px rgba(255,82,114,0.08); }
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text);
+        }
 
-  .input-mono { font-family: var(--mono); font-size: 12px; }
+        .modal-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
 
-  .field-err { font-size: 11px; color: var(--red); min-height: 15px; display: flex; align-items: center; gap: 4px; }
-  .field-err::before { content: '!'; width: 13px; height: 13px; border-radius: 50%; background: var(--red); color: #fff; font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .field-err:empty::before { display: none; }
+        .btn-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-b);
+            background: var(--glass);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--trans), background var(--trans), border-color var(--trans);
+        }
 
-  .sync-status-box {
-    font-size: 12px; color: var(--text-muted); line-height: 1.6;
-    background: var(--glass); border: 1px solid var(--glass-b);
-    border-radius: var(--r-sm); padding: 10px 14px;
-    font-family: var(--mono); font-size: 11.5px;
-  }
+        .btn-close:hover {
+            color: var(--text);
+            background: var(--glass-hover);
+            border-color: var(--glass-b2);
+        }
 
-  .field-row { display: flex; gap: 12px; }
+        .modal-body {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+        }
 
-  /* divider */
-  .section-divider {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.6px;
-    text-transform: uppercase; color: var(--text-dim);
-  }
-  .section-divider::before, .section-divider::after {
-    content: ''; flex: 1; height: 1px; background: var(--glass-b);
-  }
+        /* custom scrollbar inside modal */
+        .modal-body::-webkit-scrollbar {
+            width: 4px;
+        }
 
-  /* URL rows */
-  .url-col-head {
-    display: grid; grid-template-columns: 110px 1fr 32px;
-    gap: 6px; font-size: 10px; font-weight: 600;
-    letter-spacing: 0.5px; text-transform: uppercase;
-    color: var(--text-dim); padding: 0 2px;
-  }
-  .url-list { display: flex; flex-direction: column; gap: 6px; }
-  .url-row  { display: grid; grid-template-columns: 110px 1fr 32px; gap: 6px; align-items: center; }
+        .modal-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
-  .url-label-inp {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--glass-b);
-    border-radius: var(--r-sm); color: var(--text); font-family: var(--font);
-    font-size: 12px; padding: 9px 10px; outline: none;
-    transition: border-color var(--trans), background var(--trans);
-  }
-  .url-label-inp:focus { border-color: rgba(124,106,255,0.5); background: rgba(124,106,255,0.05); }
-  .url-label-inp::placeholder { color: var(--text-dim); }
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--glass-b2);
+            border-radius: 99px;
+        }
 
-  .url-inp {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--glass-b);
-    border-radius: var(--r-sm); color: var(--text); font-family: var(--mono);
-    font-size: 11.5px; padding: 9px 10px; outline: none; width: 100%;
-    transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
-  }
-  .url-inp:focus { border-color: rgba(124,106,255,0.5); background: rgba(124,106,255,0.05); box-shadow: 0 0 0 3px rgba(124,106,255,0.08); }
-  .url-inp::placeholder { color: var(--text-dim); font-family: var(--font); font-size: 12px; }
-  .url-inp.err { border-color: rgba(255,82,114,0.6); }
+        /* form field */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            flex: 1;
+        }
 
-  .btn-rm-url {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 32px; height: 32px; border-radius: var(--r-xs);
-    border: 1px solid var(--glass-b); background: var(--glass);
-    cursor: pointer; color: var(--text-dim);
-    transition: all var(--trans);
-  }
-  .btn-rm-url:hover { color: var(--red); border-color: rgba(255,82,114,0.4); background: rgba(255,82,114,0.08); }
-  .btn-rm-url svg { width: 11px; height: 11px; }
+        .field-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-  .btn-add-url {
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    width: 100%; padding: 9px; border-radius: var(--r-sm);
-    border: 1px dashed rgba(124,106,255,0.25); background: rgba(124,106,255,0.04);
-    color: var(--text-muted); font-family: var(--font); font-size: 12px; font-weight: 500;
-    cursor: pointer; transition: all var(--trans);
-  }
-  .btn-add-url:hover { border-color: rgba(124,106,255,0.5); background: rgba(124,106,255,0.08); color: var(--violet); }
-  .btn-add-url svg { width: 13px; height: 13px; }
+        .req {
+            color: var(--pink);
+            font-size: 13px;
+            line-height: 1;
+        }
 
-  /* File attachments */
-  .file-drop {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-    width: 100%; padding: 18px 12px; border-radius: var(--r-sm);
-    border: 1px dashed rgba(124,106,255,0.3); background: rgba(124,106,255,0.03);
-    color: var(--text-muted); font-family: var(--font); font-size: 12px; font-weight: 500;
-    cursor: pointer; transition: all var(--trans); text-align: center;
-  }
-  .file-drop:hover, .file-drop.dragover { border-color: rgba(124,106,255,0.6); background: rgba(124,106,255,0.08); color: var(--violet); }
-  .file-drop svg { width: 20px; height: 20px; opacity: 0.8; }
-  .file-drop .file-drop-hint { font-size: 10.5px; color: var(--text-dim); }
+        .field-hint {
+            font-size: 10.5px;
+            color: var(--text-dim);
+            margin-top: -3px;
+        }
 
-  .file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-  .file-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 10px; border-radius: var(--r-sm);
-    border: 1px solid var(--glass-b); background: rgba(255,255,255,0.03);
-  }
-  .file-row-ico {
-    width: 28px; height: 28px; flex-shrink: 0; border-radius: var(--r-xs);
-    background: rgba(45,212,160,0.1); border: 1px solid rgba(45,212,160,0.25);
-    display: flex; align-items: center; justify-content: center; color: var(--emerald);
-  }
-  .file-row-ico svg { width: 13px; height: 13px; }
-  .file-row-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-  .file-row-name { font-size: 12.5px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .file-row-size { font-size: 10.5px; color: var(--text-dim); font-family: var(--mono); }
-  .file-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
-  .btn-file-dl, .btn-rm-file {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: var(--r-xs);
-    border: 1px solid var(--glass-b); background: var(--glass);
-    cursor: pointer; color: var(--text-dim); transition: all var(--trans);
-  }
-  .btn-file-dl svg, .btn-rm-file svg { width: 11px; height: 11px; }
-  .btn-file-dl:hover { color: var(--cyan); border-color: rgba(6,214,200,0.4); background: rgba(6,214,200,0.08); }
-  .btn-rm-file:hover { color: var(--red); border-color: rgba(255,82,114,0.4); background: rgba(255,82,114,0.08); }
+        .input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 13px;
+            padding: 10px 13px;
+            outline: none;
+            width: 100%;
+            transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
+        }
 
-  /* modal footer */
-  .modal-footer {
-    display: flex; justify-content: flex-end; gap: 10px;
-    padding: 16px 24px 20px; border-top: 1px solid var(--glass-b); flex-shrink: 0;
-  }
-  .btn-ghost {
-    padding: 9px 18px; border-radius: var(--r-sm);
-    border: 1px solid var(--glass-b); background: var(--glass);
-    color: var(--text-muted); font-family: var(--font); font-size: 13px;
-    cursor: pointer; transition: all var(--trans);
-  }
-  .btn-ghost:hover { border-color: var(--glass-b2); color: var(--text); background: var(--glass-hover); }
+        .input:focus {
+            border-color: rgba(124, 106, 255, 0.55);
+            background: rgba(124, 106, 255, 0.06);
+            box-shadow: 0 0 0 3px rgba(124, 106, 255, 0.1);
+        }
 
-  /* kbd hint */
-  .kbd { font-family: var(--mono); font-size: 10px; color: var(--text-dim);
-         background: var(--glass); border: 1px solid var(--glass-b);
-         padding: 1px 5px; border-radius: 4px; }
+        .input::placeholder {
+            color: var(--text-dim);
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        .input.err {
+            border-color: rgba(255, 82, 114, 0.6);
+            box-shadow: 0 0 0 3px rgba(255, 82, 114, 0.08);
+        }
+
+        .input-mono {
+            font-family: var(--mono);
+            font-size: 12px;
+        }
+
+        .field-err {
+            font-size: 11px;
+            color: var(--red);
+            min-height: 15px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .field-err::before {
+            content: '!';
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--red);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .field-err:empty::before {
+            display: none;
+        }
+
+        .sync-status-box {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+            padding: 10px 14px;
+            font-family: var(--mono);
+            font-size: 11.5px;
+        }
+
+        .field-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* divider */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--glass-b);
+        }
+
+        /* URL rows */
+        .url-col-head {
+            display: grid;
+            grid-template-columns: 110px 1fr 32px;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding: 0 2px;
+        }
+
+        .url-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .url-row {
+            display: grid;
+            grid-template-columns: 110px 1fr 32px;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .url-label-inp {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 12px;
+            padding: 9px 10px;
+            outline: none;
+            transition: border-color var(--trans), background var(--trans);
+        }
+
+        .url-label-inp:focus {
+            border-color: rgba(124, 106, 255, 0.5);
+            background: rgba(124, 106, 255, 0.05);
+        }
+
+        .url-label-inp::placeholder {
+            color: var(--text-dim);
+        }
+
+        .url-inp {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-b);
+            border-radius: var(--r-sm);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 11.5px;
+            padding: 9px 10px;
+            outline: none;
+            width: 100%;
+            transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
+        }
+
+        .url-inp:focus {
+            border-color: rgba(124, 106, 255, 0.5);
+            background: rgba(124, 106, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(124, 106, 255, 0.08);
+        }
+
+        .url-inp::placeholder {
+            color: var(--text-dim);
+            font-family: var(--font);
+            font-size: 12px;
+        }
+
+        .url-inp.err {
+            border-color: rgba(255, 82, 114, 0.6);
+        }
+
+        .btn-rm-url {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--r-xs);
+            border: 1px solid var(--glass-b);
+            background: var(--glass);
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: all var(--trans);
+        }
+
+        .btn-rm-url:hover {
+            color: var(--red);
+            border-color: rgba(255, 82, 114, 0.4);
+            background: rgba(255, 82, 114, 0.08);
+        }
+
+        .btn-rm-url svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .btn-add-url {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            width: 100%;
+            padding: 9px;
+            border-radius: var(--r-sm);
+            border: 1px dashed rgba(124, 106, 255, 0.25);
+            background: rgba(124, 106, 255, 0.04);
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--trans);
+        }
+
+        .btn-add-url:hover {
+            border-color: rgba(124, 106, 255, 0.5);
+            background: rgba(124, 106, 255, 0.08);
+            color: var(--violet);
+        }
+
+        .btn-add-url svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* File attachments */
+        .file-drop {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            padding: 18px 12px;
+            border-radius: var(--r-sm);
+            border: 1px dashed rgba(124, 106, 255, 0.3);
+            background: rgba(124, 106, 255, 0.03);
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--trans);
+            text-align: center;
+        }
+
+        .file-drop:hover,
+        .file-drop.dragover {
+            border-color: rgba(124, 106, 255, 0.6);
+            background: rgba(124, 106, 255, 0.08);
+            color: var(--violet);
+        }
+
+        .file-drop svg {
+            width: 20px;
+            height: 20px;
+            opacity: 0.8;
+        }
+
+        .file-drop .file-drop-hint {
+            font-size: 10.5px;
+            color: var(--text-dim);
+        }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .file-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: var(--r-sm);
+            border: 1px solid var(--glass-b);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .file-row-ico {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            border-radius: var(--r-xs);
+            background: rgba(45, 212, 160, 0.1);
+            border: 1px solid rgba(45, 212, 160, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--emerald);
+        }
+
+        .file-row-ico svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .file-row-body {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .file-row-name {
+            font-size: 12.5px;
+            color: var(--text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-row-size {
+            font-size: 10.5px;
+            color: var(--text-dim);
+            font-family: var(--mono);
+        }
+
+        .file-row-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .btn-file-dl,
+        .btn-rm-file {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--r-xs);
+            border: 1px solid var(--glass-b);
+            background: var(--glass);
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: all var(--trans);
+        }
+
+        .btn-file-dl svg,
+        .btn-rm-file svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .btn-file-dl:hover {
+            color: var(--cyan);
+            border-color: rgba(6, 214, 200, 0.4);
+            background: rgba(6, 214, 200, 0.08);
+        }
+
+        .btn-rm-file:hover {
+            color: var(--red);
+            border-color: rgba(255, 82, 114, 0.4);
+            background: rgba(255, 82, 114, 0.08);
+        }
+
+        /* modal footer */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 16px 24px 20px;
+            border-top: 1px solid var(--glass-b);
+            flex-shrink: 0;
+        }
+
+        .btn-ghost {
+            padding: 9px 18px;
+            border-radius: var(--r-sm);
+            border: 1px solid var(--glass-b);
+            background: var(--glass);
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--trans);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--glass-b2);
+            color: var(--text);
+            background: var(--glass-hover);
+        }
+
+        /* kbd hint */
+        .kbd {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-dim);
+            background: var(--glass);
+            border: 1px solid var(--glass-b);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        /* ══════════════════════════════════════════════════════════
      TOAST
   ══════════════════════════════════════════════════════════ */
-  .toast {
-    position: fixed; bottom: 32px; left: 50%;
-    transform: translateX(-50%) translateY(70px);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    background: rgba(18,21,42,0.92);
-    border: 1px solid var(--glass-b2);
-    padding: 11px 22px 11px 16px; border-radius: 99px;
-    font-size: 13px; font-weight: 500; white-space: nowrap;
-    box-shadow: var(--shadow-md); opacity: 0; z-index: 9999;
-    transition: opacity 0.22s ease, transform 0.22s ease;
-    display: flex; align-items: center; gap: 9px; color: var(--text);
-  }
-  .toast.show    { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.success .toast-dot { background: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
-  .toast.error   .toast-dot { background: var(--red);     box-shadow: 0 0 8px var(--red); }
-  .toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(70px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(18, 21, 42, 0.92);
+            border: 1px solid var(--glass-b2);
+            padding: 11px 22px 11px 16px;
+            border-radius: 99px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            z-index: 9999;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--text);
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success .toast-dot {
+            background: var(--emerald);
+            box-shadow: 0 0 8px var(--emerald);
+        }
+
+        .toast.error .toast-dot {
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red);
+        }
+
+        .toast-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ══════════════════════════════════════════════════════════
      SCROLLBAR
   ══════════════════════════════════════════════════════════ */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--glass-b2); border-radius: 99px; }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
 
-  /* ══════════════════════════════════════════════════════════
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-b2);
+            border-radius: 99px;
+        }
+
+        /* ══════════════════════════════════════════════════════════
      RESPONSIVE
   ══════════════════════════════════════════════════════════ */
-  @media (max-width: 800px) {
-    .header-inner, .toolbar-inner, .table-wrap { padding-left: 16px; padding-right: 16px; }
-    .col-info2, .col-tag, .col-storage { display: none; }
-    .field-row { flex-direction: column; }
-    .url-col-head, .url-row { grid-template-columns: 90px 1fr 32px; }
-    .url-label-inp { font-size: 11px; }
-    .logo-version { display: none; }
-    .count-badge  { display: none; }
-    .sync-badge #syncLabel { display: none; }
-  }
-  @media (max-width: 520px) {
-    .col-info1 { display: none; }
-    .btn-primary span { display: none; }
-  }
-  </style>
+        @media (max-width: 800px) {
+
+            .header-inner,
+            .toolbar-inner,
+            .table-wrap {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .col-info2,
+            .col-tag,
+            .col-storage {
+                display: none;
+            }
+
+            .field-row {
+                flex-direction: column;
+            }
+
+            .url-col-head,
+            .url-row {
+                grid-template-columns: 90px 1fr 32px;
+            }
+
+            .url-label-inp {
+                font-size: 11px;
+            }
+
+            .logo-version {
+                display: none;
+            }
+
+            .count-badge {
+                display: none;
+            }
+
+            .sync-badge #syncLabel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .col-info1 {
+                display: none;
+            }
+
+            .btn-primary span {
+                display: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- ═══════════════════ HEADER ═══════════════════ -->
-<header class="app-header">
-  <div class="header-inner">
-    <div class="logo">
-      <div class="logo-icon">🔗</div>
-      <span class="logo-text">LinkVault</span>
-      <span class="logo-version">v2</span>
-    </div>
-    <div class="header-right">
-      <button class="sync-badge" id="syncBadge" title="GitHub sync status">
-        <span class="sync-dot" id="syncDot"></span>
-        <span id="syncLabel">Not connected</span>
-      </button>
-      <span class="count-badge" id="linkCount">0 entries</span>
-      <button class="icon-btn" id="settingsBtn" title="GitHub storage settings">
-        <svg viewBox="0 0 20 20" fill="none"><path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" stroke="currentColor" stroke-width="1.5"/><path d="M16.2 12.3a1.4 1.4 0 00.28 1.55l.05.05a1.7 1.7 0 11-2.4 2.4l-.05-.05a1.4 1.4 0 00-1.55-.28 1.4 1.4 0 00-.85 1.28V17.3a1.7 1.7 0 01-3.4 0v-.08a1.4 1.4 0 00-.9-1.25 1.4 1.4 0 00-1.55.28l-.05.05a1.7 1.7 0 11-2.4-2.4l.05-.05a1.4 1.4 0 00.28-1.55 1.4 1.4 0 00-1.28-.85H2.7a1.7 1.7 0 010-3.4h.08a1.4 1.4 0 001.25-.9 1.4 1.4 0 00-.28-1.55l-.05-.05a1.7 1.7 0 112.4-2.4l.05.05a1.4 1.4 0 001.55.28h.06a1.4 1.4 0 00.85-1.28V2.7a1.7 1.7 0 013.4 0v.08a1.4 1.4 0 00.85 1.28h.06a1.4 1.4 0 001.55-.28l.05-.05a1.7 1.7 0 112.4 2.4l-.05.05a1.4 1.4 0 00-.28 1.55v.06a1.4 1.4 0 001.28.85h.08a1.7 1.7 0 010 3.4h-.08a1.4 1.4 0 00-1.28.85z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="btn-primary" id="openModalBtn">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span>Add Link</span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- ═══════════════════ TOOLBAR ═══════════════════ -->
-<div class="toolbar">
-  <div class="toolbar-inner">
-    <div class="search-wrap">
-      <svg class="search-icon" viewBox="0 0 20 20" fill="none">
-        <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/>
-        <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-      </svg>
-      <input type="text" id="searchInput" class="search-input" placeholder="Search anything…"/>
-    </div>
-    <select id="filterTag" class="filter-select">
-      <option value="">All tags</option>
-    </select>
-    <button class="icon-btn" id="exportBtn" title="Export JSON">
-      <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4 4 4-4M4 16h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <label class="icon-btn" title="Import JSON" style="cursor:pointer">
-      <svg viewBox="0 0 20 20" fill="none"><path d="M10 17V7M6 11l4-4 4 4M4 4h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <input type="file" id="importFile" accept=".json" style="display:none"/>
-    </label>
-  </div>
-</div>
-
-<!-- ═══════════════════ TABLE ═══════════════════ -->
-<main class="table-wrap">
-
-  <div class="stats-bar" id="statsBar" style="display:none">
-    <div class="stat-item">
-      <div class="stat-dot"></div>
-      <span class="stat-label">Total</span>
-      <span class="stat-val" id="statTotal">0</span>
-    </div>
-    <div class="stat-item" id="statFilterWrap" style="display:none">
-      <div class="stat-dot" style="background:var(--cyan)"></div>
-      <span class="stat-label">Showing</span>
-      <span class="stat-val" id="statShowing">0</span>
-    </div>
-  </div>
-
-  <div class="table-card">
-    <table class="link-table" id="linkTable">
-      <thead>
-        <tr>
-          <th class="col-sl">#</th>
-          <th class="col-title" data-sort="title">
-            <div class="th-inner">Title<span class="sort-arrow"></span></div>
-          </th>
-          <th class="col-link">Links</th>
-          <th class="col-info1" data-sort="info1">
-            <div class="th-inner">Info 1<span class="sort-arrow"></span></div>
-          </th>
-          <th class="col-info2" data-sort="info2">
-            <div class="th-inner">Info 2<span class="sort-arrow"></span></div>
-          </th>
-          <th class="col-tag" data-sort="tag">
-            <div class="th-inner">Tag<span class="sort-arrow"></span></div>
-          </th>
-          <th class="col-storage">Storage</th>
-          <th class="col-actions">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-
-    <div class="empty-state" id="emptyState">
-      <div class="empty-orb">🔗</div>
-      <div class="empty-title">No links saved yet</div>
-      <div class="empty-sub">Hit <strong>Add Link</strong> to start building your personal link library.</div>
-    </div>
-  </div>
-</main>
-
-<!-- ═══════════════════ MODAL ═══════════════════ -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <div class="modal-accent"></div>
-    <div class="modal-header">
-      <div class="modal-title-wrap">
-        <div class="modal-title" id="modalTitle">Add Link</div>
-        <div class="modal-subtitle">All URLs saved to your local browser storage</div>
-      </div>
-      <button class="btn-close" id="closeModalBtn" title="Close (Esc)">✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <!-- Title -->
-      <div class="field">
-        <label class="field-label" for="inputTitle">Title <span class="req">*</span></label>
-        <input class="input" type="text" id="inputTitle" placeholder="e.g. MDN Web Docs"/>
-        <div class="field-err" id="errTitle"></div>
-      </div>
-
-      <div class="section-divider">URLs</div>
-
-      <!-- URL rows -->
-      <div class="field">
-        <div class="url-col-head">
-          <span>Label</span><span>URL</span><span></span>
+    <!-- ═══════════════════ HEADER ═══════════════════ -->
+    <header class="app-header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">🔗</div>
+                <span class="logo-text">LinkVault</span>
+                <span class="logo-version">v2</span>
+            </div>
+            <div class="header-right">
+                <button class="sync-badge" id="syncBadge" title="GitHub sync status">
+                    <span class="sync-dot" id="syncDot"></span>
+                    <span id="syncLabel">Not connected</span>
+                </button>
+                <span class="count-badge" id="linkCount">0 entries</span>
+                <button class="icon-btn" id="settingsBtn" title="GitHub storage settings">
+                    <svg viewBox="0 0 20 20" fill="none">
+                        <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" stroke="currentColor" stroke-width="1.5" />
+                        <path
+                            d="M16.2 12.3a1.4 1.4 0 00.28 1.55l.05.05a1.7 1.7 0 11-2.4 2.4l-.05-.05a1.4 1.4 0 00-1.55-.28 1.4 1.4 0 00-.85 1.28V17.3a1.7 1.7 0 01-3.4 0v-.08a1.4 1.4 0 00-.9-1.25 1.4 1.4 0 00-1.55.28l-.05.05a1.7 1.7 0 11-2.4-2.4l.05-.05a1.4 1.4 0 00.28-1.55 1.4 1.4 0 00-1.28-.85H2.7a1.7 1.7 0 010-3.4h.08a1.4 1.4 0 001.25-.9 1.4 1.4 0 00-.28-1.55l-.05-.05a1.7 1.7 0 112.4-2.4l.05.05a1.4 1.4 0 001.55.28h.06a1.4 1.4 0 00.85-1.28V2.7a1.7 1.7 0 013.4 0v.08a1.4 1.4 0 00.85 1.28h.06a1.4 1.4 0 001.55-.28l.05-.05a1.7 1.7 0 112.4 2.4l-.05.05a1.4 1.4 0 00-.28 1.55v.06a1.4 1.4 0 001.28.85h.08a1.7 1.7 0 010 3.4h-.08a1.4 1.4 0 00-1.28.85z"
+                            stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button class="btn-primary" id="openModalBtn">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <span>Add Link</span>
+                </button>
+            </div>
         </div>
-        <div class="url-list" id="urlList"></div>
-        <button type="button" class="btn-add-url" id="addUrlBtn">
-          <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          Add another URL
-        </button>
-        <div class="field-err" id="errUrls"></div>
-      </div>
+    </header>
 
-      <div class="section-divider">Details</div>
-
-      <!-- Info row -->
-      <div class="field-row">
-        <div class="field">
-          <label class="field-label" for="inputInfo1">Info 1</label>
-          <input class="input" type="text" id="inputInfo1" placeholder="Category, author…"/>
+    <!-- ═══════════════════ TOOLBAR ═══════════════════ -->
+    <div class="toolbar">
+        <div class="toolbar-inner">
+            <div class="search-wrap">
+                <svg class="search-icon" viewBox="0 0 20 20" fill="none">
+                    <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6" />
+                    <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                </svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search anything…" />
+            </div>
+            <select id="filterTag" class="filter-select">
+                <option value="">All tags</option>
+            </select>
+            <button class="icon-btn" id="exportBtn" title="Export JSON">
+                <svg viewBox="0 0 20 20" fill="none">
+                    <path d="M10 3v10M6 9l4 4 4-4M4 16h12" stroke="currentColor" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <label class="icon-btn" title="Import JSON" style="cursor:pointer">
+                <svg viewBox="0 0 20 20" fill="none">
+                    <path d="M10 17V7M6 11l4-4 4 4M4 4h12" stroke="currentColor" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <input type="file" id="importFile" accept=".json" style="display:none" />
+            </label>
         </div>
-        <div class="field">
-          <label class="field-label" for="inputInfo2">Info 2</label>
-          <input class="input" type="text" id="inputInfo2" placeholder="Date, status…"/>
-        </div>
-      </div>
-
-      <!-- Tag -->
-      <div class="field">
-        <label class="field-label" for="inputTag">Tag</label>
-        <input class="input" type="text" id="inputTag" placeholder="design, dev, reference…"/>
-      </div>
-
-      <div class="section-divider">Files</div>
-
-      <!-- File uploads -->
-      <div class="field">
-        <label class="file-drop" id="fileDropZone" for="fileInput">
-          <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4-4 4 4M4 16h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Click to upload or drag files here</span>
-          <span class="file-drop-hint">Any file type · stored locally in this browser</span>
-        </label>
-        <input type="file" id="fileInput" multiple style="display:none"/>
-        <div class="file-list" id="fileList"></div>
-      </div>
-
     </div>
 
-    <div class="modal-footer">
-      <button class="btn-ghost" id="cancelBtn">Cancel</button>
-      <button class="btn-primary" id="saveBtn">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M2 9l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Save Link
-        <span class="kbd">⌘↵</span>
-      </button>
-    </div>
-  </div>
-</div>
+    <!-- ═══════════════════ TABLE ═══════════════════ -->
+    <main class="table-wrap">
 
-<!-- ═══════════════════ SETTINGS MODAL (GitHub Sync) ═══════════════════ -->
-<div class="modal-overlay" id="settingsOverlay">
-  <div class="modal">
-    <div class="modal-accent"></div>
-    <div class="modal-header">
-      <div class="modal-title-wrap">
-        <div class="modal-title">GitHub Storage</div>
-        <div class="modal-subtitle">Your data is saved to a GitHub repo, with a local cache for speed</div>
-      </div>
-      <button class="btn-close" id="closeSettingsBtn" title="Close (Esc)">✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <div class="field">
-        <label class="field-label" for="ghToken">Personal Access Token <span class="req">*</span></label>
-        <input class="input input-mono" type="password" id="ghToken" placeholder="ghp_…"/>
-        <div class="field-hint">Needs repo contents read/write. A fine-grained token scoped to just this one repo is safest. It's stored only in this browser's local storage — never sent anywhere but api.github.com.</div>
-      </div>
-
-      <div class="field-row">
-        <div class="field">
-          <label class="field-label" for="ghOwner">Owner <span class="req">*</span></label>
-          <input class="input" type="text" id="ghOwner" placeholder="your-username"/>
+        <div class="stats-bar" id="statsBar" style="display:none">
+            <div class="stat-item">
+                <div class="stat-dot"></div>
+                <span class="stat-label">Total</span>
+                <span class="stat-val" id="statTotal">0</span>
+            </div>
+            <div class="stat-item" id="statFilterWrap" style="display:none">
+                <div class="stat-dot" style="background:var(--cyan)"></div>
+                <span class="stat-label">Showing</span>
+                <span class="stat-val" id="statShowing">0</span>
+            </div>
         </div>
-        <div class="field">
-          <label class="field-label" for="ghRepo">Repository <span class="req">*</span></label>
-          <input class="input" type="text" id="ghRepo" placeholder="linkvault-data"/>
+
+        <div class="table-card">
+            <table class="link-table" id="linkTable">
+                <thead>
+                    <tr>
+                        <th class="col-sl">#</th>
+                        <th class="col-title" data-sort="title">
+                            <div class="th-inner">Title<span class="sort-arrow"></span></div>
+                        </th>
+                        <th class="col-link">Links</th>
+                        <th class="col-info1" data-sort="info1">
+                            <div class="th-inner">Info 1<span class="sort-arrow"></span></div>
+                        </th>
+                        <th class="col-info2" data-sort="info2">
+                            <div class="th-inner">Info 2<span class="sort-arrow"></span></div>
+                        </th>
+                        <th class="col-tag" data-sort="tag">
+                            <div class="th-inner">Tag<span class="sort-arrow"></span></div>
+                        </th>
+                        <th class="col-storage">Storage</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+
+            <div class="empty-state" id="emptyState">
+                <div class="empty-orb">🔗</div>
+                <div class="empty-title">No links saved yet</div>
+                <div class="empty-sub">Hit <strong>Add Link</strong> to start building your personal link library.</div>
+            </div>
         </div>
-      </div>
+    </main>
 
-      <div class="field-row">
-        <div class="field">
-          <label class="field-label" for="ghBranch">Branch</label>
-          <input class="input" type="text" id="ghBranch" placeholder="main"/>
+    <!-- ═══════════════════ MODAL ═══════════════════ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-accent"></div>
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <div class="modal-title" id="modalTitle">Add Link</div>
+                    <div class="modal-subtitle">All URLs saved to your local browser storage</div>
+                </div>
+                <button class="btn-close" id="closeModalBtn" title="Close (Esc)">✕</button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Title -->
+                <div class="field">
+                    <label class="field-label" for="inputTitle">Title <span class="req">*</span></label>
+                    <input class="input" type="text" id="inputTitle" placeholder="e.g. MDN Web Docs" />
+                    <div class="field-err" id="errTitle"></div>
+                </div>
+
+                <div class="section-divider">URLs</div>
+
+                <!-- URL rows -->
+                <div class="field">
+                    <div class="url-col-head">
+                        <span>Label</span><span>URL</span><span></span>
+                    </div>
+                    <div class="url-list" id="urlList"></div>
+                    <button type="button" class="btn-add-url" id="addUrlBtn">
+                        <svg viewBox="0 0 16 16" fill="none">
+                            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                        </svg>
+                        Add another URL
+                    </button>
+                    <div class="field-err" id="errUrls"></div>
+                </div>
+
+                <div class="section-divider">Details</div>
+
+                <!-- Info row -->
+                <div class="field-row">
+                    <div class="field">
+                        <label class="field-label" for="inputInfo1">Info 1</label>
+                        <input class="input" type="text" id="inputInfo1" placeholder="Category, author…" />
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="inputInfo2">Info 2</label>
+                        <input class="input" type="text" id="inputInfo2" placeholder="Date, status…" />
+                    </div>
+                </div>
+
+                <!-- Tag -->
+                <div class="field">
+                    <label class="field-label" for="inputTag">Tag</label>
+                    <input class="input" type="text" id="inputTag" placeholder="design, dev, reference…" />
+                </div>
+
+                <div class="section-divider">Files</div>
+
+                <!-- File uploads -->
+                <div class="field">
+                    <label class="file-drop" id="fileDropZone" for="fileInput">
+                        <svg viewBox="0 0 20 20" fill="none">
+                            <path d="M10 3v10M6 9l4-4 4 4M4 16h12" stroke="currentColor" stroke-width="1.6"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span>Click to upload or drag files here</span>
+                        <span class="file-drop-hint">Any file type · stored locally in this browser</span>
+                    </label>
+                    <input type="file" id="fileInput" multiple style="display:none" />
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-ghost" id="cancelBtn">Cancel</button>
+                <button class="btn-primary" id="saveBtn">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <path d="M2 9l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                    Save Link
+                    <span class="kbd">⌘↵</span>
+                </button>
+            </div>
         </div>
-        <div class="field">
-          <label class="field-label" for="ghDataPath">Data file path</label>
-          <input class="input input-mono" type="text" id="ghDataPath" placeholder="linkvault/data.json"/>
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="field-label" for="ghFilesPath">Files folder path</label>
-        <input class="input input-mono" type="text" id="ghFilesPath" placeholder="linkvault/files"/>
-      </div>
-
-      <div class="field-err" id="errSettings"></div>
-
-      <div class="section-divider">Status</div>
-      <div class="sync-status-box" id="syncStatusBox">Not connected yet.</div>
-
     </div>
 
-    <div class="modal-footer" style="justify-content: space-between;">
-      <button class="btn-ghost" id="disconnectGhBtn">Disconnect</button>
-      <div style="display:flex; gap:10px;">
-        <button class="btn-ghost" id="cancelSettingsBtn">Cancel</button>
-        <button class="btn-primary" id="saveSettingsBtn">
-          <svg viewBox="0 0 16 16" fill="none"><path d="M2 9l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Connect &amp; Sync
-        </button>
-      </div>
+    <!-- ═══════════════════ SETTINGS MODAL (GitHub Sync) ═══════════════════ -->
+    <div class="modal-overlay" id="settingsOverlay">
+        <div class="modal">
+            <div class="modal-accent"></div>
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <div class="modal-title">GitHub Storage</div>
+                    <div class="modal-subtitle">Your data is saved to a GitHub repo, with a local cache for speed</div>
+                </div>
+                <button class="btn-close" id="closeSettingsBtn" title="Close (Esc)">✕</button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="field">
+                    <label class="field-label" for="ghToken">Personal Access Token <span class="req">*</span></label>
+                    <input class="input input-mono" type="password" id="ghToken" placeholder="ghp_…" />
+                    <div class="field-hint">Needs repo contents read/write. A fine-grained token scoped to just this one
+                        repo is safest. It's stored only in this browser's local storage — never sent anywhere but
+                        api.github.com.</div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label class="field-label" for="ghOwner">Owner <span class="req">*</span></label>
+                        <input class="input" type="text" id="ghOwner" placeholder="your-username" />
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="ghRepo">Repository <span class="req">*</span></label>
+                        <input class="input" type="text" id="ghRepo" placeholder="linkvault-data" />
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label class="field-label" for="ghBranch">Branch</label>
+                        <input class="input" type="text" id="ghBranch" placeholder="main" />
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="ghDataPath">Data file path</label>
+                        <input class="input input-mono" type="text" id="ghDataPath" placeholder="linkvault/data.json" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="ghFilesPath">Files folder path</label>
+                    <input class="input input-mono" type="text" id="ghFilesPath" placeholder="linkvault/files" />
+                </div>
+
+                <div class="field-err" id="errSettings"></div>
+
+                <div class="section-divider">Status</div>
+                <div class="sync-status-box" id="syncStatusBox">Not connected yet.</div>
+
+            </div>
+
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn-ghost" id="disconnectGhBtn">Disconnect</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-ghost" id="cancelSettingsBtn">Cancel</button>
+                    <button class="btn-primary" id="saveSettingsBtn">
+                        <svg viewBox="0 0 16 16" fill="none">
+                            <path d="M2 9l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Connect &amp; Sync
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- ═══════════════════ TOAST ═══════════════════ -->
-<div class="toast" id="toast">
-  <div class="toast-dot"></div>
-  <span id="toastMsg"></span>
-</div>
+    <!-- ═══════════════════ TOAST ═══════════════════ -->
+    <div class="toast" id="toast">
+        <div class="toast-dot"></div>
+        <span id="toastMsg"></span>
+    </div>
 
-<!-- ═══════════════════ SCRIPT ═══════════════════ -->
-<script>
-(function(){
-'use strict';
+    <!-- ═══════════════════ SCRIPT ═══════════════════ -->
+    <script>
+        (function () {
+            'use strict';
 
-const STORAGE_KEY = 'linkvault_v2';
-const loadLinks = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } };
-const saveLinks = l => localStorage.setItem(STORAGE_KEY, JSON.stringify(l));
+            const STORAGE_KEY = 'linkvault_v2';
+            const loadLinks = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } };
+            const saveLinks = l => localStorage.setItem(STORAGE_KEY, JSON.stringify(l));
 
-/* ── State ── */
-let links = loadLinks();
-let editingId = null, sortKey = null, sortDir = 1, filterQuery = '', filterTag = '';
-let existingFiles = [];   // [{id,name,size,type}] already stored for the entry being edited
-let removedFileIds = new Set(); // ids of existingFiles marked for removal on save
-let pendingFiles = [];    // [File, ...] newly chosen files not yet stored
+            /* ── State ── */
+            let links = loadLinks();
+            let editingId = null, sortKey = null, sortDir = 1, filterQuery = '', filterTag = '';
+            let existingFiles = [];   // [{id,name,size,type}] already stored for the entry being edited
+            let removedFileIds = new Set(); // ids of existingFiles marked for removal on save
+            let pendingFiles = [];    // [File, ...] newly chosen files not yet stored
 
-/* ── DOM ── */
-const $ = id => document.getElementById(id);
-const tableBody    = $('tableBody');
-const emptyState   = $('emptyState');
-const statsBar     = $('statsBar');
-const statTotal    = $('statTotal');
-const statShowing  = $('statShowing');
-const statFilterWrap = $('statFilterWrap');
-const linkCount    = $('linkCount');
-const searchInput  = $('searchInput');
-const filterSelect = $('filterTag');
-const modalOverlay = $('modalOverlay');
-const modalTitle   = $('modalTitle');
-const openModalBtn = $('openModalBtn');
-const closeModalBtn= $('closeModalBtn');
-const cancelBtn    = $('cancelBtn');
-const saveBtn      = $('saveBtn');
-const exportBtn    = $('exportBtn');
-const importFile   = $('importFile');
-const toast        = $('toast');
-const toastMsg     = $('toastMsg');
-const inputTitle   = $('inputTitle');
-const inputInfo1   = $('inputInfo1');
-const inputInfo2   = $('inputInfo2');
-const inputTag     = $('inputTag');
-const errTitle     = $('errTitle');
-const errUrls      = $('errUrls');
-const urlList      = $('urlList');
-const addUrlBtn    = $('addUrlBtn');
-const fileInput    = $('fileInput');
-const fileDropZone = $('fileDropZone');
-const fileList     = $('fileList');
-const syncBadge    = $('syncBadge');
-const syncDot      = $('syncDot');
-const syncLabel    = $('syncLabel');
-const settingsBtn  = $('settingsBtn');
-const settingsOverlay = $('settingsOverlay');
-const closeSettingsBtn = $('closeSettingsBtn');
-const cancelSettingsBtn = $('cancelSettingsBtn');
-const saveSettingsBtn = $('saveSettingsBtn');
-const disconnectGhBtn = $('disconnectGhBtn');
-const ghToken    = $('ghToken');
-const ghOwner    = $('ghOwner');
-const ghRepo     = $('ghRepo');
-const ghBranch   = $('ghBranch');
-const ghDataPath = $('ghDataPath');
-const ghFilesPath = $('ghFilesPath');
-const errSettings = $('errSettings');
-const syncStatusBox = $('syncStatusBox');
+            /* ── DOM ── */
+            const $ = id => document.getElementById(id);
+            const tableBody = $('tableBody');
+            const emptyState = $('emptyState');
+            const statsBar = $('statsBar');
+            const statTotal = $('statTotal');
+            const statShowing = $('statShowing');
+            const statFilterWrap = $('statFilterWrap');
+            const linkCount = $('linkCount');
+            const searchInput = $('searchInput');
+            const filterSelect = $('filterTag');
+            const modalOverlay = $('modalOverlay');
+            const modalTitle = $('modalTitle');
+            const openModalBtn = $('openModalBtn');
+            const closeModalBtn = $('closeModalBtn');
+            const cancelBtn = $('cancelBtn');
+            const saveBtn = $('saveBtn');
+            const exportBtn = $('exportBtn');
+            const importFile = $('importFile');
+            const toast = $('toast');
+            const toastMsg = $('toastMsg');
+            const inputTitle = $('inputTitle');
+            const inputInfo1 = $('inputInfo1');
+            const inputInfo2 = $('inputInfo2');
+            const inputTag = $('inputTag');
+            const errTitle = $('errTitle');
+            const errUrls = $('errUrls');
+            const urlList = $('urlList');
+            const addUrlBtn = $('addUrlBtn');
+            const fileInput = $('fileInput');
+            const fileDropZone = $('fileDropZone');
+            const fileList = $('fileList');
+            const syncBadge = $('syncBadge');
+            const syncDot = $('syncDot');
+            const syncLabel = $('syncLabel');
+            const settingsBtn = $('settingsBtn');
+            const settingsOverlay = $('settingsOverlay');
+            const closeSettingsBtn = $('closeSettingsBtn');
+            const cancelSettingsBtn = $('cancelSettingsBtn');
+            const saveSettingsBtn = $('saveSettingsBtn');
+            const disconnectGhBtn = $('disconnectGhBtn');
+            const ghToken = $('ghToken');
+            const ghOwner = $('ghOwner');
+            const ghRepo = $('ghRepo');
+            const ghBranch = $('ghBranch');
+            const ghDataPath = $('ghDataPath');
+            const ghFilesPath = $('ghFilesPath');
+            const errSettings = $('errSettings');
+            const syncStatusBox = $('syncStatusBox');
 
-/* ── Utils ── */
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-const isURL = s => { try { new URL(s); return true; } catch { return false; } };
-const formatSize = bytes => {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
-  if (bytes < 1024*1024*1024) return (bytes/1024/1024).toFixed(1) + ' MB';
-  return (bytes/1024/1024/1024).toFixed(1) + ' GB';
-};
+            /* ── Utils ── */
+            const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+            const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const isURL = s => { try { new URL(s); return true; } catch { return false; } };
+            const formatSize = bytes => {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+                return (bytes / 1024 / 1024 / 1024).toFixed(1) + ' GB';
+            };
 
-/* ── File storage (IndexedDB — stores the actual file blobs) ── */
-const FILE_DB_NAME = 'linkvault_files_db';
-const FILE_STORE = 'files';
-let _dbPromise = null;
-function openFileDB() {
-  if (_dbPromise) return _dbPromise;
-  _dbPromise = new Promise((resolve, reject) => {
-    const req = indexedDB.open(FILE_DB_NAME, 1);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(FILE_STORE)) db.createObjectStore(FILE_STORE, { keyPath: 'id' });
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-  return _dbPromise;
-}
-async function idbPutFile(record) {
-  const db = await openFileDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(FILE_STORE, 'readwrite');
-    tx.objectStore(FILE_STORE).put(record);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-async function idbGetFile(id) {
-  const db = await openFileDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(FILE_STORE, 'readonly');
-    const req = tx.objectStore(FILE_STORE).get(id);
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror = () => reject(req.error);
-  });
-}
-async function idbDeleteFile(id) {
-  const db = await openFileDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(FILE_STORE, 'readwrite');
-    tx.objectStore(FILE_STORE).delete(id);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-async function downloadStoredFile(fileId, filename) {
-  try {
-    const rec = await idbGetFile(fileId);
-    if (!rec || !rec.blob) { showToast('File not found in this browser', 'error'); return; }
-    const url = URL.createObjectURL(rec.blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename || rec.name || 'file';
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  } catch {
-    showToast('Download failed', 'error');
-  }
-}
+            /* ── File storage (IndexedDB — stores the actual file blobs) ── */
+            const FILE_DB_NAME = 'linkvault_files_db';
+            const FILE_STORE = 'files';
+            let _dbPromise = null;
+            function openFileDB() {
+                if (_dbPromise) return _dbPromise;
+                _dbPromise = new Promise((resolve, reject) => {
+                    const req = indexedDB.open(FILE_DB_NAME, 1);
+                    req.onupgradeneeded = () => {
+                        const db = req.result;
+                        if (!db.objectStoreNames.contains(FILE_STORE)) db.createObjectStore(FILE_STORE, { keyPath: 'id' });
+                    };
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject(req.error);
+                });
+                return _dbPromise;
+            }
+            async function idbPutFile(record) {
+                const db = await openFileDB();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction(FILE_STORE, 'readwrite');
+                    tx.objectStore(FILE_STORE).put(record);
+                    tx.oncomplete = () => resolve();
+                    tx.onerror = () => reject(tx.error);
+                });
+            }
+            async function idbGetFile(id) {
+                const db = await openFileDB();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction(FILE_STORE, 'readonly');
+                    const req = tx.objectStore(FILE_STORE).get(id);
+                    req.onsuccess = () => resolve(req.result || null);
+                    req.onerror = () => reject(req.error);
+                });
+            }
+            async function idbDeleteFile(id) {
+                const db = await openFileDB();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction(FILE_STORE, 'readwrite');
+                    tx.objectStore(FILE_STORE).delete(id);
+                    tx.oncomplete = () => resolve();
+                    tx.onerror = () => reject(tx.error);
+                });
+            }
+            async function downloadStoredFile(fileId, filename) {
+                try {
+                    let rec = await idbGetFile(fileId);
+                    let blob = rec?.blob;
+                    if (!blob && ghConfig) {
+                        showToast('Downloading from GitHub…');
+                        blob = await ghDownloadFile(fileId, filename);
+                        if (blob) {
+                            await idbPutFile({ id: fileId, blob, name: filename, size: blob.size, type: blob.type }).catch(() => {});
+                        }
+                    }
+                    if (!blob) { showToast('File not found in storage', 'error'); return; }
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url; a.download = filename || rec?.name || 'file';
+                    document.body.appendChild(a); a.click(); a.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                } catch {
+                    showToast('Download failed', 'error');
+                }
+            }
 
-/* ── Toast ── */
-let toastTimer;
-function showToast(msg, type='success') {
-  toastMsg.textContent = msg;
-  toast.className = `toast ${type} show`;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
-}
+            /* ── Toast ── */
+            let toastTimer;
+            function showToast(msg, type = 'success') {
+                toastMsg.textContent = msg;
+                toast.className = `toast ${type} show`;
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+            }
 
-/* ══════════════════════════════════════════════════════════
-   GITHUB SYNC
-   GitHub is the durable source of truth; localStorage + IndexedDB
-   are just a fast local cache so the UI never waits on the network.
-══════════════════════════════════════════════════════════ */
-const GH_CONFIG_KEY = 'linkvault_gh_config';
-const loadGhConfig = () => { try { return JSON.parse(localStorage.getItem(GH_CONFIG_KEY)) || null; } catch { return null; } };
-const saveGhConfig = c => localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(c));
-const clearGhConfig = () => localStorage.removeItem(GH_CONFIG_KEY);
+            /* ══════════════════════════════════════════════════════════
+               GITHUB SYNC
+               GitHub is the durable source of truth; localStorage + IndexedDB
+               are just a fast local cache so the UI never waits on the network.
+            ══════════════════════════════════════════════════════════ */
+            const GH_CONFIG_KEY = 'linkvault_gh_config';
+            const loadGhConfig = () => { try { return JSON.parse(localStorage.getItem(GH_CONFIG_KEY)) || null; } catch { return null; } };
+            const saveGhConfig = c => localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(c));
+            const clearGhConfig = () => localStorage.removeItem(GH_CONFIG_KEY);
 
-let ghConfig = loadGhConfig();
-let ghDataSha = null;
-let ghSyncQueue = Promise.resolve();
+            let ghConfig = loadGhConfig();
+            let ghDataSha = null;
+            let ghSyncQueue = Promise.resolve();
 
-function setSyncStatus(state, text) {
-  syncBadge.className = `sync-badge ${state}`;
-  syncLabel.textContent = text;
-}
+            function setSyncStatus(state, text) {
+                syncBadge.className = `sync-badge ${state}`;
+                syncLabel.textContent = text;
+            }
 
-function ghHeaders() {
-  return {
-    'Authorization': `token ${ghConfig.token}`,
-    'Accept': 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
-}
+            function ghHeaders() {
+                return {
+                    'Authorization': `token ${ghConfig.token}`,
+                    'Accept': 'application/vnd.github+json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                };
+            }
 
-/* base64 helpers — unicode-safe for text, byte-safe for binary blobs */
-const textToBase64 = str => btoa(unescape(encodeURIComponent(str)));
-const base64ToText = b64 => decodeURIComponent(escape(atob(b64.replace(/\n/g,''))));
-function blobToBase64(blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
-function base64ToBlob(b64, type) {
-  const clean = b64.replace(/\n/g, '');
-  const bytes = atob(clean);
-  const arr = new Uint8Array(bytes.length);
-  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
-  return new Blob([arr], { type: type || 'application/octet-stream' });
-}
+            /* base64 helpers — unicode-safe for text, byte-safe for binary blobs */
+            const textToBase64 = str => btoa(unescape(encodeURIComponent(str)));
+            const base64ToText = b64 => decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+            function blobToBase64(blob) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            }
+            function base64ToBlob(b64, type) {
+                const clean = b64.replace(/\n/g, '');
+                const bytes = atob(clean);
+                const arr = new Uint8Array(bytes.length);
+                for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+                return new Blob([arr], { type: type || 'application/octet-stream' });
+            }
 
-async function ghGetFile(path) {
-  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}?ref=${encodeURIComponent(ghConfig.branch)}&_=${Date.now()}`;
-  const res = await fetch(url, { headers: ghHeaders() });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`GitHub couldn't read ${path} (${res.status}).`);
-  const json = await res.json();
-  return { sha: json.sha, rawB64: json.content, text: json.content ? base64ToText(json.content) : '' };
-}
-async function ghPutFile(path, base64Content, sha, message) {
-  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
-  const body = { message, content: base64Content, branch: ghConfig.branch };
-  if (sha) body.sha = sha;
-  const res = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  if (!res.ok) {
-    const t = await res.text().catch(()=> '');
-    throw new Error(`GitHub couldn't save ${path} (${res.status}). ${t.slice(0,150)}`);
-  }
-  return (await res.json()).content.sha;
-}
-async function ghDeleteFile(path, sha, message) {
-  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
-  const res = await fetch(url, { method: 'DELETE', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sha, branch: ghConfig.branch }) });
-  if (!res.ok && res.status !== 404) throw new Error(`GitHub couldn't delete ${path} (${res.status}).`);
-}
-async function ghTestConnection() {
-  const res = await fetch(`https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}`, { headers: ghHeaders() });
-  if (res.status === 401 || res.status === 403) throw new Error('Token is invalid or lacks access to this repo.');
-  if (res.status === 404) throw new Error("Repo not found — check the owner/repo names and the token's access.");
-  if (!res.ok) throw new Error(`Couldn't reach the repo (${res.status}).`);
-}
+            async function ghGetFile(path) {
+                const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}?ref=${encodeURIComponent(ghConfig.branch)}&_=${Date.now()}`;
+                const res = await fetch(url, { headers: ghHeaders() });
+                if (res.status === 404) return null;
+                if (!res.ok) throw new Error(`GitHub couldn't read ${path} (${res.status}).`);
+                const json = await res.json();
+                return { sha: json.sha, rawB64: json.content, text: json.content ? base64ToText(json.content) : '' };
+            }
+            async function ghPutFile(path, base64Content, sha, message) {
+                const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+                const body = { message, content: base64Content, branch: ghConfig.branch };
+                if (sha) body.sha = sha;
+                const res = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error(`GitHub couldn't save ${path} (${res.status}). ${t.slice(0, 150)}`);
+                }
+                return (await res.json()).content.sha;
+            }
+            async function ghDeleteFile(path, sha, message) {
+                const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+                const body = { message, sha, branch: ghConfig.branch };
+                const res = await fetch(url, { method: 'DELETE', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                if (!res.ok && res.status !== 404) throw new Error(`GitHub couldn't delete ${path} (${res.status}).`);
+            }
+            async function ghTestConnection() {
+                const res = await fetch(`https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}`, { headers: ghHeaders() });
+                if (res.status === 401 || res.status === 403) throw new Error('Token is invalid or lacks access to this repo.');
+                if (res.status === 404) throw new Error("Repo not found — check owner/repo names and token access.");
+                if (!res.ok) throw new Error(`Couldn't reach the repo (${res.status}).`);
+            }
 
-function ghFilePath(fileId, name) {
-  const safe = String(name || 'file').replace(/[^\w.\-]+/g, '_').slice(0, 80);
-  return `${ghConfig.filesPath.replace(/\/$/, '')}/${fileId}__${safe}`;
-}
+            function ghFilePath(fileId, name) {
+                const safe = String(name || 'file').replace(/[^\w.\-]+/g, '_').slice(0, 80);
+                const basePath = (ghConfig.filesPath || 'linkvault/files').replace(/\/$/, '');
+                return `${basePath}/${fileId}__${safe}`;
+            }
 
-/* Pull remote data.json. Returns an array, or null if it doesn't exist yet. */
-async function ghPullData() {
-  const file = await ghGetFile(ghConfig.dataPath);
-  if (!file) { ghDataSha = null; return null; }
-  ghDataSha = file.sha;
-  try {
-    const parsed = JSON.parse(file.text || '[]');
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    throw new Error('Remote data.json is not valid JSON.');
-  }
-}
+            /* Pull remote data.json. Returns array or null if not found */
+            async function ghPullData() {
+                const file = await ghGetFile(ghConfig.dataPath);
+                if (!file) { ghDataSha = null; return null; }
+                ghDataSha = file.sha;
+                try {
+                    const parsed = JSON.parse(file.text || '[]');
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch {
+                    throw new Error('Remote data.json is not valid JSON.');
+                }
+            }
 
-/* Push the current `links` array to the remote data.json (whole-file overwrite). */
-async function ghPushData() {
-  if (!ghConfig) return;
-  setSyncStatus('syncing', 'Syncing…');
-  const content = textToBase64(JSON.stringify(links, null, 2));
-  ghDataSha = await ghPutFile(ghConfig.dataPath, content, ghDataSha, `Update LinkVault data (${links.length} entries)`);
-  setSyncStatus('ok', 'Synced');
-}
+            /* Push current links array with auto-conflict resolution */
+            async function ghPushData() {
+                if (!ghConfig) return;
+                setSyncStatus('syncing', 'Syncing…');
+                try {
+                    const content = textToBase64(JSON.stringify(links, null, 2));
+                    if (!ghDataSha) {
+                        const cur = await ghGetFile(ghConfig.dataPath).catch(() => null);
+                        if (cur) ghDataSha = cur.sha;
+                    }
+                    try {
+                        ghDataSha = await ghPutFile(ghConfig.dataPath, content, ghDataSha, `Update LinkVault data (${links.length} entries)`);
+                    } catch (putErr) {
+                        // Conflict resolution: fetch latest SHA and merge
+                        const cur = await ghGetFile(ghConfig.dataPath).catch(() => null);
+                        if (cur) {
+                            ghDataSha = cur.sha;
+                            try {
+                                const remote = JSON.parse(cur.text || '[]');
+                                if (Array.isArray(remote)) {
+                                    const map = new Map();
+                                    [...remote, ...links].forEach(l => {
+                                        const ex = map.get(l.id);
+                                        if (!ex || (l.updatedAt || 0) >= (ex.updatedAt || 0)) map.set(l.id, l);
+                                    });
+                                    links = [...map.values()];
+                                    saveLinks(links);
+                                    render();
+                                }
+                            } catch (_) {}
+                            const mergedContent = textToBase64(JSON.stringify(links, null, 2));
+                            ghDataSha = await ghPutFile(ghConfig.dataPath, mergedContent, ghDataSha, `Update LinkVault data (${links.length} entries)`);
+                        } else {
+                            throw putErr;
+                        }
+                    }
+                    setSyncStatus('ok', 'Connected');
+                } catch (err) {
+                    console.error('GitHub push error:', err);
+                    setSyncStatus('error', 'Sync failed');
+                    throw err;
+                }
+            }
 
-/* Serialize pushes so overlapping saves never race on the file's sha. */
-function queueGhPush() {
-  if (!ghConfig) return Promise.resolve();
-  ghSyncQueue = ghSyncQueue.then(() => ghPushData()).catch(err => {
-    console.error(err);
-    setSyncStatus('error', 'Sync failed');
-    showToast("Saved locally, but GitHub sync failed — it'll retry on the next change", 'error');
-  });
-  return ghSyncQueue;
-}
+            /* Serialize pushes so saves never race */
+            function queueGhPush() {
+                if (!ghConfig) return Promise.resolve();
+                ghSyncQueue = ghSyncQueue.then(() => ghPushData()).catch(err => {
+                    console.error(err);
+                    setSyncStatus('error', 'Sync failed');
+                });
+                return ghSyncQueue;
+            }
 
-async function ghUploadFile(fileId, file) {
-  const b64 = await blobToBase64(file);
-  await ghPutFile(ghFilePath(fileId, file.name), b64, null, `Add file ${file.name}`);
-}
-async function ghDownloadFile(fileId, name, type) {
-  const file = await ghGetFile(ghFilePath(fileId, name));
-  if (!file) return null;
-  return base64ToBlob(file.rawB64, type);
-}
-async function ghDeleteStoredFile(fileId, name) {
-  const path = ghFilePath(fileId, name);
-  const file = await ghGetFile(path).catch(() => null);
-  if (file) await ghDeleteFile(path, file.sha, `Remove file ${name}`);
-}
+            async function ghUploadFile(fileId, file) {
+                if (!ghConfig) return;
+                try {
+                    const b64 = await blobToBase64(file);
+                    await ghPutFile(ghFilePath(fileId, file.name), b64, null, `Add file ${file.name}`);
+                } catch (e) {
+                    console.error('GitHub file upload error:', e);
+                }
+            }
+            async function ghDownloadFile(fileId, name, type) {
+                if (!ghConfig) return null;
+                try {
+                    const file = await ghGetFile(ghFilePath(fileId, name));
+                    if (!file) return null;
+                    return base64ToBlob(file.rawB64, type);
+                } catch (e) {
+                    console.error('GitHub file download error:', e);
+                    return null;
+                }
+            }
+            async function ghDeleteStoredFile(fileId, name) {
+                if (!ghConfig) return;
+                try {
+                    const path = ghFilePath(fileId, name);
+                    const file = await ghGetFile(path).catch(() => null);
+                    if (file) await ghDeleteFile(path, file.sha, `Remove file ${name}`);
+                } catch (e) {
+                    console.error('GitHub file delete error:', e);
+                }
+            }
 
-/* ── Settings modal ── */
-function openSettingsModal() {
-  errSettings.textContent = '';
-  const c = ghConfig || {};
-  ghToken.value = c.token || '';
-  ghOwner.value = c.owner || '';
-  ghRepo.value = c.repo || '';
-  ghBranch.value = c.branch || 'main';
-  ghDataPath.value = c.dataPath || 'linkvault/data.json';
-  ghFilesPath.value = c.filesPath || 'linkvault/files';
-  syncStatusBox.textContent = ghConfig
-    ? `Connected to ${ghConfig.owner}/${ghConfig.repo} (${ghConfig.branch}). Data file: ${ghConfig.dataPath}`
-    : 'Not connected yet. Add a token and repo below to start syncing.';
-  settingsOverlay.classList.add('open');
-  setTimeout(() => ghToken.focus(), 100);
-}
-function closeSettingsModal() { settingsOverlay.classList.remove('open'); }
+            /* ── Settings modal ── */
+            function openSettingsModal() {
+                errSettings.textContent = '';
+                const c = ghConfig || {};
+                ghToken.value = c.token || '';
+                ghOwner.value = c.owner || '';
+                ghRepo.value = c.repo || '';
+                ghBranch.value = c.branch || 'main';
+                ghDataPath.value = c.dataPath || 'linkvault/data.json';
+                ghFilesPath.value = c.filesPath || 'linkvault/files';
+                syncStatusBox.textContent = ghConfig
+                    ? `Connected to ${ghConfig.owner}/${ghConfig.repo} (${ghConfig.branch}). Data file: ${ghConfig.dataPath}`
+                    : 'Not connected yet. Add a token and repo below to start syncing.';
+                settingsOverlay.classList.add('open');
+                setTimeout(() => ghToken.focus(), 100);
+            }
+            function closeSettingsModal() { settingsOverlay.classList.remove('open'); }
 
-async function ghConnectAndSync() {
-  errSettings.textContent = '';
-  const token = ghToken.value.trim();
-  const owner = ghOwner.value.trim();
-  const repo  = ghRepo.value.trim();
-  const branch = ghBranch.value.trim() || 'main';
-  const dataPath  = (ghDataPath.value.trim()  || 'linkvault/data.json').replace(/^\/+/, '');
-  const filesPath = (ghFilesPath.value.trim() || 'linkvault/files').replace(/^\/+|\/+$/g, '');
+            async function ghConnectAndSync() {
+                errSettings.textContent = '';
+                const token = ghToken.value.trim();
+                const owner = ghOwner.value.trim();
+                const repo = ghRepo.value.trim();
+                const branch = ghBranch.value.trim() || 'main';
+                const dataPath = (ghDataPath.value.trim() || 'linkvault/data.json').replace(/^\/+/, '');
+                const filesPath = (ghFilesPath.value.trim() || 'linkvault/files').replace(/^\/+|\/+$/g, '');
 
-  if (!token || !owner || !repo) {
-    errSettings.textContent = 'Token, owner, and repository are required.';
-    return;
-  }
+                if (!token || !owner || !repo) {
+                    errSettings.textContent = 'Token, owner, and repository are required.';
+                    return;
+                }
 
-  const candidate = { token, owner, repo, branch, dataPath, filesPath };
-  const prevConfig = ghConfig;
-  const prevHTML = saveSettingsBtn.innerHTML;
-  saveSettingsBtn.disabled = true;
-  saveSettingsBtn.innerHTML = 'Connecting…';
-  ghConfig = candidate;
-  setSyncStatus('syncing', 'Connecting…');
+                const candidate = { token, owner, repo, branch, dataPath, filesPath };
+                const prevConfig = ghConfig;
+                const prevHTML = saveSettingsBtn.innerHTML;
+                saveSettingsBtn.disabled = true;
+                saveSettingsBtn.innerHTML = 'Connecting…';
+                ghConfig = candidate;
+                setSyncStatus('syncing', 'Connecting…');
 
-  try {
-    await ghTestConnection();
-    const remote = await ghPullData();
-    if (remote) {
-      const map = new Map();
-      [...remote, ...links].forEach(l => {
-        const ex = map.get(l.id);
-        if (!ex || (l.updatedAt||0) >= (ex.updatedAt||0)) map.set(l.id, l);
-      });
-      links = [...map.values()];
-    }
-    migrate();
-    saveLinks(links);
-    saveGhConfig(candidate);
-    await ghPushData();
-    render();
-    setSyncStatus('ok', 'Synced');
-    showToast('Connected to GitHub ✓');
-    closeSettingsModal();
-  } catch (err) {
-    ghConfig = prevConfig;
-    errSettings.textContent = err.message || "Couldn't connect — check your details and try again.";
-    setSyncStatus(prevConfig ? 'ok' : 'idle', prevConfig ? 'Synced' : 'Not connected');
-  } finally {
-    saveSettingsBtn.disabled = false;
-    saveSettingsBtn.innerHTML = prevHTML;
-  }
-}
+                try {
+                    await ghTestConnection();
+                    const remote = await ghPullData();
+                    if (remote) {
+                        const map = new Map();
+                        [...remote, ...links].forEach(l => {
+                            const ex = map.get(l.id);
+                            if (!ex || (l.updatedAt || 0) >= (ex.updatedAt || 0)) map.set(l.id, l);
+                        });
+                        links = [...map.values()];
+                    }
+                    migrate();
+                    saveLinks(links);
+                    saveGhConfig(candidate);
+                    await ghPushData();
+                    render();
+                    setSyncStatus('ok', 'Connected');
+                    showToast('Connected to GitHub ✓');
+                    closeSettingsModal();
+                } catch (err) {
+                    ghConfig = prevConfig;
+                    errSettings.textContent = err.message || "Couldn't connect — check your details and try again.";
+                    setSyncStatus(prevConfig ? 'ok' : 'idle', prevConfig ? 'Connected' : 'Not connected');
+                } finally {
+                    saveSettingsBtn.disabled = false;
+                    saveSettingsBtn.innerHTML = prevHTML;
+                }
+            }
 
-async function initGhSync() {
-  if (!ghConfig) { setSyncStatus('idle', 'Not connected'); return; }
-  setSyncStatus('syncing', 'Syncing…');
-  try {
-    const remote = await ghPullData();
-    if (remote) {
-      const map = new Map();
-      [...remote, ...links].forEach(l => {
-        const ex = map.get(l.id);
-        if (!ex || (l.updatedAt||0) >= (ex.updatedAt||0)) map.set(l.id, l);
-      });
-      links = [...map.values()];
-      migrate();
-      saveLinks(links);
-      render();
-    }
-    setSyncStatus('ok', 'Synced');
-  } catch (err) {
-    console.error(err);
-    setSyncStatus('error', 'Sync failed');
-  }
-}
+            async function initGhSync() {
+                if (!ghConfig || !ghConfig.token || !ghConfig.owner || !ghConfig.repo) {
+                    setSyncStatus('idle', 'Not connected');
+                    return;
+                }
+                setSyncStatus('ok', 'Connected');
+                try {
+                    const remote = await ghPullData();
+                    if (remote && Array.isArray(remote)) {
+                        const map = new Map();
+                        [...remote, ...links].forEach(l => {
+                            const ex = map.get(l.id);
+                            if (!ex || (l.updatedAt || 0) >= (ex.updatedAt || 0)) map.set(l.id, l);
+                        });
+                        links = [...map.values()];
+                        migrate();
+                        saveLinks(links);
+                        render();
+                        if (links.length !== remote.length) {
+                            await ghPushData();
+                        }
+                    } else if (remote === null && links.length > 0) {
+                        await ghPushData();
+                    }
+                    setSyncStatus('ok', 'Connected');
+                } catch (err) {
+                    console.warn('Sync notice:', err);
+                    if (ghConfig) setSyncStatus('ok', 'Connected');
+                }
+            }
 
-settingsBtn.addEventListener('click', openSettingsModal);
-syncBadge.addEventListener('click', openSettingsModal);
-closeSettingsBtn.addEventListener('click', closeSettingsModal);
-cancelSettingsBtn.addEventListener('click', closeSettingsModal);
-saveSettingsBtn.addEventListener('click', ghConnectAndSync);
-settingsOverlay.addEventListener('click', e => { if (e.target === settingsOverlay) closeSettingsModal(); });
-disconnectGhBtn.addEventListener('click', () => {
-  if (!ghConfig) { closeSettingsModal(); return; }
-  if (!confirm('Disconnect GitHub sync? Your data stays saved on this device, but new changes will stop syncing to GitHub until you reconnect.')) return;
-  clearGhConfig(); ghConfig = null; ghDataSha = null;
-  setSyncStatus('idle', 'Not connected');
-  syncStatusBox.textContent = 'Not connected yet. Add a token and repo below to start syncing.';
-  showToast('Disconnected from GitHub');
-});
+            settingsBtn.addEventListener('click', openSettingsModal);
+            syncBadge.addEventListener('click', openSettingsModal);
+            closeSettingsBtn.addEventListener('click', closeSettingsModal);
+            cancelSettingsBtn.addEventListener('click', closeSettingsModal);
+            saveSettingsBtn.addEventListener('click', ghConnectAndSync);
+            settingsOverlay.addEventListener('click', e => { if (e.target === settingsOverlay) closeSettingsModal(); });
+            disconnectGhBtn.addEventListener('click', () => {
+                if (!ghConfig) { closeSettingsModal(); return; }
+                if (!confirm('Disconnect GitHub sync? Your data stays saved on this device, but new changes will stop syncing to GitHub until you reconnect.')) return;
+                clearGhConfig(); ghConfig = null; ghDataSha = null;
+                setSyncStatus('idle', 'Not connected');
+                syncStatusBox.textContent = 'Not connected yet. Add a token and repo below to start syncing.';
+                showToast('Disconnected from GitHub');
+            });
 
-/* ══ URL ROWS ══ */
-function buildUrlRow(labelVal='', urlVal='') {
-  const row = document.createElement('div');
-  row.className = 'url-row';
-  const lInp = document.createElement('input');
-  lInp.type = 'text'; lInp.className = 'url-label-inp';
-  lInp.placeholder = 'Label (opt.)'; lInp.maxLength = 30; lInp.value = labelVal;
+            // Keep connected & sync when tab regains focus or network reconnects
+            window.addEventListener('focus', () => { if (ghConfig) initGhSync(); });
+            window.addEventListener('online', () => { if (ghConfig) initGhSync(); });
+            // Periodic sync every 60s
+            setInterval(() => { if (ghConfig) initGhSync(); }, 60000);
 
-  const uInp = document.createElement('input');
-  uInp.type = 'url'; uInp.className = 'url-inp';
-  uInp.placeholder = 'https://…'; uInp.value = urlVal;
+            /* ══ URL ROWS ══ */
+            function buildUrlRow(labelVal = '', urlVal = '') {
+                const row = document.createElement('div');
+                row.className = 'url-row';
+                const lInp = document.createElement('input');
+                lInp.type = 'text'; lInp.className = 'url-label-inp';
+                lInp.placeholder = 'Label (opt.)'; lInp.maxLength = 30; lInp.value = labelVal;
 
-  const rmBtn = document.createElement('button');
-  rmBtn.type = 'button'; rmBtn.className = 'btn-rm-url'; rmBtn.title = 'Remove';
-  rmBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
-  rmBtn.addEventListener('click', () => {
-    if (urlList.children.length > 1) { row.remove(); }
-    else { lInp.value = ''; uInp.value = ''; uInp.classList.remove('err'); }
-  });
+                const uInp = document.createElement('input');
+                uInp.type = 'url'; uInp.className = 'url-inp';
+                uInp.placeholder = 'https://…'; uInp.value = urlVal;
 
-  row.append(lInp, uInp, rmBtn);
-  return row;
-}
+                const rmBtn = document.createElement('button');
+                rmBtn.type = 'button'; rmBtn.className = 'btn-rm-url'; rmBtn.title = 'Remove';
+                rmBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+                rmBtn.addEventListener('click', () => {
+                    if (urlList.children.length > 1) { row.remove(); }
+                    else { lInp.value = ''; uInp.value = ''; uInp.classList.remove('err'); }
+                });
 
-function populateUrlList(urls) {
-  urlList.innerHTML = '';
-  if (!urls || !urls.length) { urlList.appendChild(buildUrlRow()); return; }
-  urls.forEach(u => urlList.appendChild(buildUrlRow(u.label||'', u.url||'')));
-}
+                row.append(lInp, uInp, rmBtn);
+                return row;
+            }
 
-addUrlBtn.addEventListener('click', () => {
-  const row = buildUrlRow();
-  urlList.appendChild(row);
-  row.querySelector('.url-inp').focus();
-});
+            function populateUrlList(urls) {
+                urlList.innerHTML = '';
+                if (!urls || !urls.length) { urlList.appendChild(buildUrlRow()); return; }
+                urls.forEach(u => urlList.appendChild(buildUrlRow(u.label || '', u.url || '')));
+            }
 
-/* ══ FILE ROWS ══ */
-function buildFileRow(name, size, { onDownload, onRemove }) {
-  const row = document.createElement('div');
-  row.className = 'file-row';
-  row.innerHTML = `
+            addUrlBtn.addEventListener('click', () => {
+                const row = buildUrlRow();
+                urlList.appendChild(row);
+                row.querySelector('.url-inp').focus();
+            });
+
+            /* ══ FILE ROWS ══ */
+            function buildFileRow(name, size, { onDownload, onRemove }) {
+                const row = document.createElement('div');
+                row.className = 'file-row';
+                row.innerHTML = `
     <div class="file-row-ico"><svg viewBox="0 0 16 16" fill="none"><path d="M4 1.5h5.5L13 5v9.5H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 1.5V5H13" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
     <div class="file-row-body">
       <div class="file-row-name" title="${esc(name)}">${esc(name)}</div>
-      <div class="file-row-size">${esc(formatSize(size||0))}</div>
+      <div class="file-row-size">${esc(formatSize(size || 0))}</div>
     </div>
     <div class="file-row-actions"></div>
   `;
-  const actions = row.querySelector('.file-row-actions');
-  if (onDownload) {
-    const dlBtn = document.createElement('button');
-    dlBtn.type = 'button'; dlBtn.className = 'btn-file-dl'; dlBtn.title = 'Download';
-    dlBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M6 1v6M3.5 5L6 7.5 8.5 5M2 9.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-    dlBtn.addEventListener('click', onDownload);
-    actions.appendChild(dlBtn);
-  }
-  const rmBtn = document.createElement('button');
-  rmBtn.type = 'button'; rmBtn.className = 'btn-rm-file'; rmBtn.title = 'Remove';
-  rmBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
-  rmBtn.addEventListener('click', onRemove);
-  actions.appendChild(rmBtn);
-  return row;
-}
+                const actions = row.querySelector('.file-row-actions');
+                if (onDownload) {
+                    const dlBtn = document.createElement('button');
+                    dlBtn.type = 'button'; dlBtn.className = 'btn-file-dl'; dlBtn.title = 'Download';
+                    dlBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M6 1v6M3.5 5L6 7.5 8.5 5M2 9.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                    dlBtn.addEventListener('click', onDownload);
+                    actions.appendChild(dlBtn);
+                }
+                const rmBtn = document.createElement('button');
+                rmBtn.type = 'button'; rmBtn.className = 'btn-rm-file'; rmBtn.title = 'Remove';
+                rmBtn.innerHTML = `<svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+                rmBtn.addEventListener('click', onRemove);
+                actions.appendChild(rmBtn);
+                return row;
+            }
 
-function renderFileList() {
-  fileList.innerHTML = '';
-  existingFiles.forEach(f => {
-    if (removedFileIds.has(f.id)) return;
-    fileList.appendChild(buildFileRow(f.name, f.size, {
-      onDownload: () => downloadStoredFile(f.id, f.name),
-      onRemove: () => { removedFileIds.add(f.id); renderFileList(); }
-    }));
-  });
-  pendingFiles.forEach((file, idx) => {
-    fileList.appendChild(buildFileRow(file.name, file.size, {
-      onRemove: () => { pendingFiles.splice(idx, 1); renderFileList(); }
-    }));
-  });
-}
+            function renderFileList() {
+                fileList.innerHTML = '';
+                existingFiles.forEach(f => {
+                    if (removedFileIds.has(f.id)) return;
+                    fileList.appendChild(buildFileRow(f.name, f.size, {
+                        onDownload: () => downloadStoredFile(f.id, f.name),
+                        onRemove: () => { removedFileIds.add(f.id); renderFileList(); }
+                    }));
+                });
+                pendingFiles.forEach((file, idx) => {
+                    fileList.appendChild(buildFileRow(file.name, file.size, {
+                        onRemove: () => { pendingFiles.splice(idx, 1); renderFileList(); }
+                    }));
+                });
+            }
 
-function addPendingFiles(fileArr) {
-  [...fileArr].forEach(f => pendingFiles.push(f));
-  renderFileList();
-}
+            function addPendingFiles(fileArr) {
+                [...fileArr].forEach(f => pendingFiles.push(f));
+                renderFileList();
+            }
 
-fileInput.addEventListener('change', () => {
-  if (fileInput.files.length) addPendingFiles(fileInput.files);
-  fileInput.value = '';
-});
-['dragover','dragenter'].forEach(evt => fileDropZone.addEventListener(evt, e => { e.preventDefault(); fileDropZone.classList.add('dragover'); }));
-['dragleave','drop'].forEach(evt => fileDropZone.addEventListener(evt, e => { e.preventDefault(); fileDropZone.classList.remove('dragover'); }));
-fileDropZone.addEventListener('drop', e => {
-  if (e.dataTransfer?.files?.length) addPendingFiles(e.dataTransfer.files);
-});
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length) addPendingFiles(fileInput.files);
+                fileInput.value = '';
+            });
+            ['dragover', 'dragenter'].forEach(evt => fileDropZone.addEventListener(evt, e => { e.preventDefault(); fileDropZone.classList.add('dragover'); }));
+            ['dragleave', 'drop'].forEach(evt => fileDropZone.addEventListener(evt, e => { e.preventDefault(); fileDropZone.classList.remove('dragover'); }));
+            fileDropZone.addEventListener('drop', e => {
+                if (e.dataTransfer?.files?.length) addPendingFiles(e.dataTransfer.files);
+            });
 
-/* ══ MODAL ══ */
-function openModal(entry=null) {
-  editingId = entry?.id || null;
-  modalTitle.textContent = entry ? 'Edit Link' : 'Add Link';
-  inputTitle.value = entry?.title || '';
-  inputInfo1.value = entry?.info1 || '';
-  inputInfo2.value = entry?.info2 || '';
-  inputTag.value   = entry?.tag   || '';
-  populateUrlList(entry?.urls);
-  existingFiles = entry?.files ? [...entry.files] : [];
-  removedFileIds = new Set();
-  pendingFiles = [];
-  renderFileList();
-  clearErrors();
-  modalOverlay.classList.add('open');
-  setTimeout(() => inputTitle.focus(), 100);
-}
+            /* ══ MODAL ══ */
+            function openModal(entry = null) {
+                editingId = entry?.id || null;
+                modalTitle.textContent = entry ? 'Edit Link' : 'Add Link';
+                inputTitle.value = entry?.title || '';
+                inputInfo1.value = entry?.info1 || '';
+                inputInfo2.value = entry?.info2 || '';
+                inputTag.value = entry?.tag || '';
+                populateUrlList(entry?.urls);
+                existingFiles = entry?.files ? [...entry.files] : [];
+                removedFileIds = new Set();
+                pendingFiles = [];
+                renderFileList();
+                clearErrors();
+                modalOverlay.classList.add('open');
+                setTimeout(() => inputTitle.focus(), 100);
+            }
 
-function closeModal() {
-  modalOverlay.classList.remove('open'); editingId = null;
-  existingFiles = []; removedFileIds = new Set(); pendingFiles = [];
-}
+            function closeModal() {
+                modalOverlay.classList.remove('open'); editingId = null;
+                existingFiles = []; removedFileIds = new Set(); pendingFiles = [];
+            }
 
-function clearErrors() {
-  errTitle.textContent = '';
-  errUrls.textContent  = '';
-  inputTitle.classList.remove('err');
-  urlList.querySelectorAll('.url-inp').forEach(i => i.classList.remove('err'));
-}
+            function clearErrors() {
+                errTitle.textContent = '';
+                errUrls.textContent = '';
+                inputTitle.classList.remove('err');
+                urlList.querySelectorAll('.url-inp').forEach(i => i.classList.remove('err'));
+            }
 
-/* ══ SAVE ══ */
-let isSaving = false;
-async function handleSave() {
-  if (isSaving) return;
-  clearErrors();
-  let valid = true;
-  const title = inputTitle.value.trim();
-  const info1 = inputInfo1.value.trim();
-  const info2 = inputInfo2.value.trim();
-  const tag   = inputTag.value.trim().toLowerCase();
-  const urlRows = [...urlList.querySelectorAll('.url-row')];
+            /* ══ SAVE ══ */
+            let isSaving = false;
+            async function handleSave() {
+                if (isSaving) return;
+                clearErrors();
+                let valid = true;
+                const title = inputTitle.value.trim();
+                const info1 = inputInfo1.value.trim();
+                const info2 = inputInfo2.value.trim();
+                const tag = inputTag.value.trim().toLowerCase();
+                const urlRows = [...urlList.querySelectorAll('.url-row')];
 
-  if (!title) {
-    errTitle.textContent = 'Title is required.';
-    inputTitle.classList.add('err');
-    valid = false;
-  }
+                if (!title) {
+                    errTitle.textContent = 'Title is required.';
+                    inputTitle.classList.add('err');
+                    valid = false;
+                }
 
-  let hasAny = false;
-  urlRows.forEach(row => {
-    const inp = row.querySelector('.url-inp');
-    const val = inp.value.trim();
-    if (!val) return;
-    hasAny = true;
-    if (!isURL(val)) { inp.classList.add('err'); errUrls.textContent = 'One or more URLs are invalid.'; valid = false; }
-  });
-  if (!hasAny) {
-    urlList.querySelector('.url-inp').classList.add('err');
-    errUrls.textContent = 'At least one URL is required.';
-    valid = false;
-  }
-  if (!valid) return;
+                let hasAny = false;
+                urlRows.forEach(row => {
+                    const inp = row.querySelector('.url-inp');
+                    const val = inp.value.trim();
+                    if (!val) return;
+                    hasAny = true;
+                    if (!isURL(val)) { inp.classList.add('err'); errUrls.textContent = 'One or more URLs are invalid.'; valid = false; }
+                });
+                if (!hasAny) {
+                    urlList.querySelector('.url-inp').classList.add('err');
+                    errUrls.textContent = 'At least one URL is required.';
+                    valid = false;
+                }
+                if (!valid) return;
 
-  const urls = urlRows
-    .map(r => ({ label: r.querySelector('.url-label-inp').value.trim(), url: r.querySelector('.url-inp').value.trim() }))
-    .filter(u => u.url);
+                const urls = urlRows
+                    .map(r => ({ label: r.querySelector('.url-label-inp').value.trim(), url: r.querySelector('.url-inp').value.trim() }))
+                    .filter(u => u.url);
 
-  isSaving = true;
-  saveBtn.disabled = true;
-  const prevSaveHTML = saveBtn.innerHTML;
-  saveBtn.innerHTML = 'Saving…';
+                isSaving = true;
+                saveBtn.disabled = true;
+                const prevSaveHTML = saveBtn.innerHTML;
+                saveBtn.innerHTML = 'Saving…';
 
-  try {
-    const finalId = editingId || uid();
+                try {
+                    const finalId = editingId || uid();
 
-    // Remove files the user deleted from the modal
-    for (const fid of removedFileIds) {
-      try { await idbDeleteFile(fid); } catch { /* ignore */ }
-    }
-    const keptExisting = existingFiles.filter(f => !removedFileIds.has(f.id));
+                    // Remove files user deleted
+                    for (const fid of removedFileIds) {
+                        try { await idbDeleteFile(fid); } catch { /* ignore */ }
+                        const fObj = existingFiles.find(f => f.id === fid);
+                        if (ghConfig && fObj) {
+                            ghDeleteStoredFile(fid, fObj.name).catch(() => {});
+                        }
+                    }
+                    const keptExisting = existingFiles.filter(f => !removedFileIds.has(f.id));
 
-    // Persist newly attached files into IndexedDB
-    const newFileMeta = [];
-    for (const file of pendingFiles) {
-      const fid = uid();
-      try {
-        await idbPutFile({ id: fid, linkId: finalId, blob: file, name: file.name, type: file.type, size: file.size });
-        newFileMeta.push({ id: fid, name: file.name, type: file.type, size: file.size });
-      } catch {
-        showToast(`Couldn't store "${file.name}"`, 'error');
-      }
-    }
-    const files = [...keptExisting, ...newFileMeta];
+                    // Persist new files into IndexedDB & GitHub
+                    const newFileMeta = [];
+                    for (const file of pendingFiles) {
+                        const fid = uid();
+                        try {
+                            await idbPutFile({ id: fid, linkId: finalId, blob: file, name: file.name, type: file.type, size: file.size });
+                            newFileMeta.push({ id: fid, name: file.name, type: file.type, size: file.size });
+                            if (ghConfig) {
+                                ghUploadFile(fid, file).catch(() => {});
+                            }
+                        } catch {
+                            showToast(`Couldn't store "${file.name}"`, 'error');
+                        }
+                    }
+                    const files = [...keptExisting, ...newFileMeta];
 
-    if (editingId) {
-      const idx = links.findIndex(l => l.id === editingId);
-      if (idx !== -1) { links[idx] = { ...links[idx], title, urls, info1, info2, tag, files, updatedAt: Date.now() }; showToast('Link updated ✓'); }
-    } else {
-      links.push({ id: finalId, title, urls, info1, info2, tag, files, createdAt: Date.now(), updatedAt: Date.now() });
-      showToast('Link saved ✓');
-    }
-    saveLinks(links); closeModal(); render();
-  } finally {
-    isSaving = false;
-    saveBtn.disabled = false;
-    saveBtn.innerHTML = prevSaveHTML;
-  }
-}
+                    if (editingId) {
+                        const idx = links.findIndex(l => l.id === editingId);
+                        if (idx !== -1) { links[idx] = { ...links[idx], title, urls, info1, info2, tag, files, updatedAt: Date.now() }; showToast('Link updated ✓'); }
+                    } else {
+                        links.push({ id: finalId, title, urls, info1, info2, tag, files, createdAt: Date.now(), updatedAt: Date.now() });
+                        showToast('Link saved ✓');
+                    }
+                    saveLinks(links);
+                    closeModal();
+                    render();
+                    queueGhPush();
+                } finally {
+                    isSaving = false;
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = prevSaveHTML;
+                }
+            }
 
-/* ── Delete ── */
-function handleDelete(id) {
-  if (!confirm('Delete this entry? Any attached files will also be removed.')) return;
-  const entry = links.find(l => l.id === id);
-  (entry?.files || []).forEach(f => { idbDeleteFile(f.id).catch(() => {}); });
-  links = links.filter(l => l.id !== id);
-  saveLinks(links); render();
-  showToast('Entry deleted', 'error');
-}
+            /* ── Delete ── */
+            function handleDelete(id) {
+                if (!confirm('Delete this entry? Any attached files will also be removed.')) return;
+                const entry = links.find(l => l.id === id);
+                (entry?.files || []).forEach(f => {
+                    idbDeleteFile(f.id).catch(() => { });
+                    if (ghConfig) ghDeleteStoredFile(f.id, f.name).catch(() => {});
+                });
+                links = links.filter(l => l.id !== id);
+                saveLinks(links);
+                render();
+                queueGhPush();
+                showToast('Entry deleted', 'error');
+            }
 
-/* ── Sort ── */
-function handleSort(key) {
-  sortDir = sortKey === key ? sortDir * -1 : 1; sortKey = key; render();
-}
+            /* ── Sort ── */
+            function handleSort(key) {
+                sortDir = sortKey === key ? sortDir * -1 : 1; sortKey = key; render();
+            }
 
-/* ── Filter ── */
-function getFiltered() {
-  let result = [...links];
-  if (filterQuery) {
-    const q = filterQuery.toLowerCase();
-    result = result.filter(l =>
-      l.title.toLowerCase().includes(q) || l.info1.toLowerCase().includes(q) ||
-      l.info2.toLowerCase().includes(q) || l.tag.toLowerCase().includes(q) ||
-      (l.urls||[]).some(u => u.url.toLowerCase().includes(q)||(u.label||'').toLowerCase().includes(q))
-    );
-  }
-  if (filterTag) result = result.filter(l => l.tag === filterTag);
-  if (sortKey) {
-    result.sort((a,b) => {
-      const va=(a[sortKey]||'').toString().toLowerCase(), vb=(b[sortKey]||'').toString().toLowerCase();
-      return va<vb ? -sortDir : va>vb ? sortDir : 0;
-    });
-  }
-  return result;
-}
+            /* ── Filter ── */
+            function getFiltered() {
+                let result = [...links];
+                if (filterQuery) {
+                    const q = filterQuery.toLowerCase();
+                    result = result.filter(l =>
+                        l.title.toLowerCase().includes(q) || l.info1.toLowerCase().includes(q) ||
+                        l.info2.toLowerCase().includes(q) || l.tag.toLowerCase().includes(q) ||
+                        (l.urls || []).some(u => u.url.toLowerCase().includes(q) || (u.label || '').toLowerCase().includes(q))
+                    );
+                }
+                if (filterTag) result = result.filter(l => l.tag === filterTag);
+                if (sortKey) {
+                    result.sort((a, b) => {
+                        const va = (a[sortKey] || '').toString().toLowerCase(), vb = (b[sortKey] || '').toString().toLowerCase();
+                        return va < vb ? -sortDir : va > vb ? sortDir : 0;
+                    });
+                }
+                return result;
+            }
 
-/* ── Tag dropdown ── */
-function refreshTagFilter() {
-  const tags=[...new Set(links.map(l=>l.tag).filter(Boolean))].sort();
-  const cur=filterSelect.value;
-  filterSelect.innerHTML='<option value="">All tags</option>';
-  tags.forEach(t=>{ const o=document.createElement('option'); o.value=t; o.textContent=t; filterSelect.appendChild(o); });
-  filterSelect.value=tags.includes(cur)?cur:'';
-}
+            /* ── Tag dropdown ── */
+            function refreshTagFilter() {
+                const tags = [...new Set(links.map(l => l.tag).filter(Boolean))].sort();
+                const cur = filterSelect.value;
+                filterSelect.innerHTML = '<option value="">All tags</option>';
+                tags.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; filterSelect.appendChild(o); });
+                filterSelect.value = tags.includes(cur) ? cur : '';
+            }
 
-/* ── Links cell ── */
-function renderLinksCell(urls) {
-  if (!urls||!urls.length) return '<span class="dash">—</span>';
-  const MAX=3, shown=urls.slice(0,MAX), rest=urls.length-MAX;
-  let h='<div class="cell-links">';
-  shown.forEach((u,i)=>{
-    const lbl=u.label||`Link ${i+1}`;
-    h+=`<div class="cell-link-row">
+            /* ── Links cell ── */
+            function renderLinksCell(urls) {
+                if (!urls || !urls.length) return '<span class="dash">—</span>';
+                const MAX = 3, shown = urls.slice(0, MAX), rest = urls.length - MAX;
+                let h = '<div class="cell-links">';
+                shown.forEach((u, i) => {
+                    const lbl = u.label || `Link ${i + 1}`;
+                    h += `<div class="cell-link-row">
       <a href="${esc(u.url)}" target="_blank" rel="noopener noreferrer" title="${esc(u.url)}">
         <span class="link-badge">${esc(lbl)}</span>
         <span class="link-url-text">${esc(u.url)}</span>
         <svg class="link-ext-icon" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M5 2h5v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>`;
-  });
-  if (rest>0) h+=`<span class="more-badge">+${rest} more</span>`;
-  h+='</div>'; return h;
-}
+                });
+                if (rest > 0) h += `<span class="more-badge">+${rest} more</span>`;
+                h += '</div>'; return h;
+            }
 
-/* ── Storage cell ── */
-function renderStorageCell(files) {
-  if (!files||!files.length) return '<span class="dash">—</span>';
-  const MAX=2, shown=files.slice(0,MAX), rest=files.length-MAX;
-  let h='<div class="cell-storage">';
-  shown.forEach(f=>{
-    h+=`<button type="button" class="storage-file-btn" data-file-id="${esc(f.id)}" data-file-name="${esc(f.name)}" title="Download ${esc(f.name)} (${esc(formatSize(f.size||0))})">
+            /* ── Storage cell ── */
+            function renderStorageCell(files) {
+                if (!files || !files.length) return '<span class="dash">—</span>';
+                const MAX = 2, shown = files.slice(0, MAX), rest = files.length - MAX;
+                let h = '<div class="cell-storage">';
+                shown.forEach(f => {
+                    h += `<button type="button" class="storage-file-btn" data-file-id="${esc(f.id)}" data-file-name="${esc(f.name)}" title="Download ${esc(f.name)} (${esc(formatSize(f.size || 0))})">
       <svg class="file-ico" viewBox="0 0 12 12" fill="none"><path d="M3 1h4l2 2v8H3z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
       <span class="file-name-text">${esc(f.name)}</span>
       <svg class="dl-ico" viewBox="0 0 12 12" fill="none"><path d="M6 1v6M3.5 5L6 7.5 8.5 5M2 9.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>`;
-  });
-  if (rest>0) h+=`<span class="more-badge">+${rest} more</span>`;
-  h+='</div>'; return h;
-}
+                });
+                if (rest > 0) h += `<span class="more-badge">+${rest} more</span>`;
+                h += '</div>'; return h;
+            }
 
-/* ── Render ── */
-function render() {
-  refreshTagFilter();
-  const rows=getFiltered();
-  const n=links.length;
-  linkCount.textContent=`${n} entr${n!==1?'ies':'y'}`;
-  statTotal.textContent=n;
+            /* ── Render ── */
+            function render() {
+                refreshTagFilter();
+                const rows = getFiltered();
+                const n = links.length;
+                linkCount.textContent = `${n} entr${n !== 1 ? 'ies' : 'y'}`;
+                statTotal.textContent = n;
 
-  if (n>0) statsBar.style.display='flex'; else statsBar.style.display='none';
+                if (n > 0) statsBar.style.display = 'flex'; else statsBar.style.display = 'none';
 
-  const isFiltering = filterQuery||filterTag;
-  if (isFiltering) {
-    statFilterWrap.style.display='flex';
-    statShowing.textContent=rows.length;
-  } else {
-    statFilterWrap.style.display='none';
-  }
+                const isFiltering = filterQuery || filterTag;
+                if (isFiltering) {
+                    statFilterWrap.style.display = 'flex';
+                    statShowing.textContent = rows.length;
+                } else {
+                    statFilterWrap.style.display = 'none';
+                }
 
-  document.querySelectorAll('.link-table th[data-sort]').forEach(th=>{
-    const arrow=th.querySelector('.sort-arrow');
-    if(!arrow) return;
-    arrow.textContent=th.dataset.sort===sortKey?(sortDir===1?' ↑':' ↓'):'';
-  });
+                document.querySelectorAll('.link-table th[data-sort]').forEach(th => {
+                    const arrow = th.querySelector('.sort-arrow');
+                    if (!arrow) return;
+                    arrow.textContent = th.dataset.sort === sortKey ? (sortDir === 1 ? ' ↑' : ' ↓') : '';
+                });
 
-  if (!rows.length) {
-    tableBody.innerHTML=''; emptyState.classList.add('visible'); return;
-  }
-  emptyState.classList.remove('visible');
+                if (!rows.length) {
+                    tableBody.innerHTML = ''; emptyState.classList.add('visible'); return;
+                }
+                emptyState.classList.remove('visible');
 
-  tableBody.innerHTML=rows.map((e,i)=>`
+                tableBody.innerHTML = rows.map((e, i) => `
     <tr data-id="${esc(e.id)}">
-      <td class="col-sl"><span class="sl-num">${String(i+1).padStart(2,'0')}</span></td>
+      <td class="col-sl"><span class="sl-num">${String(i + 1).padStart(2, '0')}</span></td>
       <td class="col-title"><div class="cell-title" title="${esc(e.title)}">${esc(e.title)}</div></td>
       <td class="col-link">${renderLinksCell(e.urls)}</td>
-      <td class="col-info1"><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1)||'<span class="dash">—</span>'}</div></td>
-      <td class="col-info2"><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2)||'<span class="dash">—</span>'}</div></td>
-      <td class="col-tag">${e.tag?`<span class="tag-pill">${esc(e.tag)}</span>`:'<span class="dash">—</span>'}</td>
+      <td class="col-info1"><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1) || '<span class="dash">—</span>'}</div></td>
+      <td class="col-info2"><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2) || '<span class="dash">—</span>'}</div></td>
+      <td class="col-tag">${e.tag ? `<span class="tag-pill">${esc(e.tag)}</span>` : '<span class="dash">—</span>'}</td>
       <td class="col-storage">${renderStorageCell(e.files)}</td>
       <td class="col-actions">
         <div class="action-group">
@@ -1649,65 +2604,75 @@ function render() {
       </td>
     </tr>
   `).join('');
-}
+            }
 
-/* ── Migrate ── */
-function migrate() {
-  let changed=false;
-  links=links.map(l=>{ if(!l.urls){ changed=true; return {...l, urls:l.url?[{label:'',url:l.url}]:[]}; } return l; });
-  links=links.map(l=>{ if(!l.files){ changed=true; return {...l, files:[]}; } return l; });
-  if(changed) saveLinks(links);
-}
+            /* ── Migrate ── */
+            function migrate() {
+                let changed = false;
+                links = links.map(l => { if (!l.urls) { changed = true; return { ...l, urls: l.url ? [{ label: '', url: l.url }] : [] }; } return l; });
+                links = links.map(l => { if (!l.files) { changed = true; return { ...l, files: [] }; } return l; });
+                if (changed) saveLinks(links);
+            }
 
-/* ── Events ── */
-tableBody.addEventListener('click', e=>{
-  const eb=e.target.closest('.btn-action.edit'), db=e.target.closest('.btn-action.del');
-  const fb=e.target.closest('.storage-file-btn');
-  if(eb){ const en=links.find(l=>l.id===eb.dataset.id); if(en) openModal(en); }
-  if(db) handleDelete(db.dataset.id);
-  if(fb) downloadStoredFile(fb.dataset.fileId, fb.dataset.fileName);
-});
-document.querySelectorAll('.link-table th[data-sort]').forEach(th=>th.addEventListener('click',()=>handleSort(th.dataset.sort)));
-searchInput.addEventListener('input',()=>{ filterQuery=searchInput.value.trim(); render(); });
-filterSelect.addEventListener('change',()=>{ filterTag=filterSelect.value; render(); });
-openModalBtn.addEventListener('click',()=>openModal());
-closeModalBtn.addEventListener('click',closeModal);
-cancelBtn.addEventListener('click',closeModal);
-saveBtn.addEventListener('click',handleSave);
-modalOverlay.addEventListener('click',e=>{ if(e.target===modalOverlay) closeModal(); });
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeModal();
-  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&modalOverlay.classList.contains('open')) handleSave();
-});
+            /* ── Events ── */
+            tableBody.addEventListener('click', e => {
+                const eb = e.target.closest('.btn-action.edit'), db = e.target.closest('.btn-action.del');
+                const fb = e.target.closest('.storage-file-btn');
+                if (eb) { const en = links.find(l => l.id === eb.dataset.id); if (en) openModal(en); }
+                if (db) handleDelete(db.dataset.id);
+                if (fb) downloadStoredFile(fb.dataset.fileId, fb.dataset.fileName);
+            });
+            document.querySelectorAll('.link-table th[data-sort]').forEach(th => th.addEventListener('click', () => handleSort(th.dataset.sort)));
+            searchInput.addEventListener('input', () => { filterQuery = searchInput.value.trim(); render(); });
+            filterSelect.addEventListener('change', () => { filterTag = filterSelect.value; render(); });
+            openModalBtn.addEventListener('click', () => openModal());
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            saveBtn.addEventListener('click', handleSave);
+            modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') closeModal();
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && modalOverlay.classList.contains('open')) handleSave();
+            });
 
-exportBtn.addEventListener('click',()=>{
-  if(!links.length){showToast('Nothing to export','error');return;}
-  const blob=new Blob([JSON.stringify(links,null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`linkvault-${new Date().toISOString().slice(0,10)}.json`;
-  a.click(); URL.revokeObjectURL(a.href);
-  showToast(`Exported ${links.length} entries ✓`);
-});
+            exportBtn.addEventListener('click', () => {
+                if (!links.length) { showToast('Nothing to export', 'error'); return; }
+                const blob = new Blob([JSON.stringify(links, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+                a.download = `linkvault-${new Date().toISOString().slice(0, 10)}.json`;
+                a.click(); URL.revokeObjectURL(a.href);
+                showToast(`Exported ${links.length} entries ✓`);
+            });
 
-importFile.addEventListener('change',e=>{
-  const file=e.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    try{
-      const imp=JSON.parse(ev.target.result);
-      if(!Array.isArray(imp)) throw new Error();
-      const ids=new Set(links.map(l=>l.id));
-      const fresh=imp.filter(l=>l.title&&!ids.has(l.id));
-      links=[...links,...fresh]; migrate(); saveLinks(links); render();
-      showToast(`Imported ${fresh.length} entr${fresh.length!==1?'ies':'y'} ✓`);
-    } catch { showToast('Invalid JSON file','error'); }
-    importFile.value='';
-  };
-  reader.readAsText(file);
-});
+            importFile.addEventListener('change', e => {
+                const file = e.target.files[0]; if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const imp = JSON.parse(ev.target.result);
+                        if (!Array.isArray(imp)) throw new Error();
+                        const ids = new Set(links.map(l => l.id));
+                        const fresh = imp.filter(l => l.title && !ids.has(l.id));
+                        links = [...links, ...fresh];
+                        migrate();
+                        saveLinks(links);
+                        render();
+                        queueGhPush();
+                        showToast(`Imported ${fresh.length} entr${fresh.length !== 1 ? 'ies' : 'y'} ✓`);
+                    } catch { showToast('Invalid JSON file', 'error'); }
+                    importFile.value = '';
+                };
+                reader.readAsText(file);
+            });
 
-migrate(); render();
-})();
-</script>
+            migrate();
+            render();
+            if (ghConfig && ghConfig.token && ghConfig.owner && ghConfig.repo) {
+                setSyncStatus('ok', 'Connected');
+            }
+            initGhSync();
+        })();
+    </script>
 </body>
+
 </html>
