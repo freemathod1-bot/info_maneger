@@ -1,14 +1,14 @@
 [
   {
     "id": "mt9hdi3ifeq6p",
-    "title": "using tmdb api extract all released movies tv show of any country also add it in streaming server",
+    "title": "using tmdb api extract all released movies tv show of any country also",
     "urls": [
       {
         "label": "",
         "url": "https://github.com/ytbro8326-sudo/tmdb_imdb_id_with_movie_server_extractor"
       },
       {
-        "label": "tmdb collect from wiki",
+        "label": "tmdb collect from wiki using wikipedia titles matc",
         "url": "https://github.com/ytbro8326-sudo/tmdb_id_collector_from_wikipedia_verify"
       }
     ],
@@ -17,7 +17,7 @@
     "tag": "",
     "files": [],
     "createdAt": 1787711676894,
-    "updatedAt": 1787711760965
+    "updatedAt": 1787715996052
   },
   {
     "id": "mt9hirn98ojtv",
