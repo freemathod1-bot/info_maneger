@@ -186,5 +186,25 @@
     "files": [],
     "createdAt": 1787719961919,
     "updatedAt": 1787720020134
+  },
+  {
+    "id": "mt9mhslqea2th",
+    "title": "list of anime repos multple servers  and urls list",
+    "urls": [
+      {
+        "label": "animegg mal mapper",
+        "url": "https://github.com/ytbro8326-sudo/animeg_last_mal_id_mapper"
+      },
+      {
+        "label": "anidb",
+        "url": "https://github.com/ytbro8326-sudo/anidb_stream"
+      }
+    ],
+    "info1": "",
+    "info2": "",
+    "tag": "",
+    "files": [],
+    "createdAt": 1787720275214,
+    "updatedAt": 1787720275214
   }
 ]
