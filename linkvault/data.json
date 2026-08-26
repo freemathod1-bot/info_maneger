@@ -78,6 +78,10 @@
       {
         "label": "",
         "url": "https://anidbplayer.onrender.com/ this is use ytbro gmail and github repo"
+      },
+      {
+        "label": "m3u8 player",
+        "url": "https://stream-player-anof.onrender.com/"
       }
     ],
     "info1": "",
@@ -85,7 +89,7 @@
     "tag": "",
     "files": [],
     "createdAt": 1787718435286,
-    "updatedAt": 1787722516791
+    "updatedAt": 1787723930146
   },
   {
     "id": "mt9lojhsdjlue",
