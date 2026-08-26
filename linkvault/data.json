@@ -170,6 +170,10 @@
       {
         "label": "srtfile manege github repos",
         "url": "https://github-maneger-1.onrender.com/"
+      },
+      {
+        "label": "it use google storage with clinet auth",
+        "url": "https://srtfile.github.io/googledrivemaneger/"
       }
     ],
     "info1": "https://github-maneger-1.onrender.com/  this is manege different github account repos by simitulausly",
@@ -177,6 +181,6 @@
     "tag": "",
     "files": [],
     "createdAt": 1787719961919,
-    "updatedAt": 1787719961919
+    "updatedAt": 1787720020134
   }
 ]
