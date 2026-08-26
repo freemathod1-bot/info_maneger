@@ -48,247 +48,154 @@
     .app-header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
     }
     .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .logo { display: flex; align-items: center; gap: 9px; }
-    .logo-mark {
-      font-size: 22px;
-      color: var(--accent);
-      line-height: 1;
-      filter: drop-shadow(0 0 8px var(--accent));
-    }
-    .logo-text {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
+    .logo-mark { font-size: 22px; color: var(--accent); line-height: 1; filter: drop-shadow(0 0 8px var(--accent)); }
+    .logo-text  { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
     .header-meta { display: flex; align-items: center; gap: 14px; }
     .link-count {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text-muted);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 99px;
+      font-family: var(--mono); font-size: 12px; color: var(--text-muted);
+      background: var(--surface2); border: 1px solid var(--border);
+      padding: 4px 10px; border-radius: 99px;
     }
     .btn-add {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 8px 18px;
-      border-radius: var(--radius-sm);
-      font-family: var(--font);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background var(--trans), box-shadow var(--trans);
+      background: var(--accent); color: #fff; border: none;
+      padding: 8px 18px; border-radius: var(--radius-sm);
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background var(--trans), box-shadow var(--trans);
       letter-spacing: 0.2px;
     }
     .btn-add:hover { background: #7494ff; box-shadow: 0 0 14px var(--accent-glow); }
 
     /* ─── TOOLBAR ───────────────────────────────────────── */
-    .toolbar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
+    .toolbar { background: var(--surface); border-bottom: 1px solid var(--border); }
     .toolbar-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 10px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      max-width: 1200px; margin: 0 auto; padding: 10px 24px;
+      display: flex; align-items: center; gap: 12px;
     }
     .search-wrap { flex: 1; position: relative; }
     .search-icon {
-      position: absolute;
-      left: 11px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      color: var(--text-dim);
-      pointer-events: none;
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: var(--text-dim); pointer-events: none;
     }
     .search-input {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 13px;
-      padding: 8px 12px 8px 34px;
-      outline: none;
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text); font-family: var(--font);
+      font-size: 13px; padding: 8px 12px 8px 34px; outline: none;
       transition: border-color var(--trans);
     }
     .search-input:focus { border-color: var(--accent); }
     .search-input::placeholder { color: var(--text-dim); }
-
     .filter-wrap { display: flex; align-items: center; gap: 8px; }
     .filter-select {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 13px;
-      padding: 8px 10px;
-      outline: none;
-      cursor: pointer;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text); font-family: var(--font);
+      font-size: 13px; padding: 8px 10px; outline: none; cursor: pointer;
       transition: border-color var(--trans);
     }
     .filter-select:focus { border-color: var(--accent); }
-
     .btn-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      color: var(--text-muted);
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      cursor: pointer; color: var(--text-muted);
       transition: color var(--trans), border-color var(--trans);
     }
     .btn-icon:hover { color: var(--accent); border-color: var(--accent); }
     .btn-icon svg { width: 16px; height: 16px; }
 
     /* ─── TABLE ─────────────────────────────────────────── */
-    .table-wrap {
-      max-width: 1200px;
-      margin: 28px auto 60px;
-      padding: 0 24px;
-    }
+    .table-wrap { max-width: 1200px; margin: 28px auto 60px; padding: 0 24px; }
     .link-table {
-      width: 100%;
-      border-collapse: collapse;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: var(--surface);
+      width: 100%; border-collapse: collapse;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; background: var(--surface);
     }
-    .link-table thead {
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border2);
-    }
+    .link-table thead { background: var(--surface2); border-bottom: 1px solid var(--border2); }
     .link-table th {
-      padding: 12px 14px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      user-select: none;
+      padding: 12px 14px; text-align: left; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted);
+      white-space: nowrap; user-select: none;
     }
     .link-table th[data-sort] { cursor: pointer; }
     .link-table th[data-sort]:hover { color: var(--accent); }
     .sort-arrow { font-size: 10px; margin-left: 4px; }
     .link-table td {
-      padding: 13px 14px;
-      border-top: 1px solid var(--border);
-      vertical-align: middle;
-      font-size: 13px;
+      padding: 12px 14px; border-top: 1px solid var(--border);
+      vertical-align: middle; font-size: 13px;
     }
     .link-table tbody tr { transition: background var(--trans); }
     .link-table tbody tr:hover { background: var(--surface2); }
 
     .col-sl      { width: 48px; }
     .col-title   { min-width: 150px; }
-    .col-link    { min-width: 180px; max-width: 240px; }
+    .col-link    { min-width: 200px; }
     .col-info1   { min-width: 110px; }
     .col-info2   { min-width: 110px; }
     .col-tag     { width: 90px; }
     .col-actions { width: 80px; }
 
-    .sl-num {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-dim);
-      font-weight: 500;
-    }
+    .sl-num { font-family: var(--mono); font-size: 11px; color: var(--text-dim); font-weight: 500; }
+
     .cell-title {
-      font-weight: 600;
-      color: var(--text);
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-weight: 600; color: var(--text); max-width: 200px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .cell-link a {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--accent);
-      text-decoration: none;
-      display: block;
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      transition: color var(--trans);
+
+    /* ── Multi-link cell ── */
+    .cell-links { display: flex; flex-direction: column; gap: 5px; }
+    .cell-links a {
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      text-decoration: none; display: flex; align-items: center; gap: 5px;
+      max-width: 260px; transition: color var(--trans);
     }
-    .cell-link a:hover { color: #8fa9ff; text-decoration: underline; }
+    .cell-links a:hover { color: #8fa9ff; text-decoration: underline; }
+    .link-label {
+      display: inline-block; font-family: var(--font); font-size: 10px;
+      font-weight: 600; background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 4px; padding: 1px 5px; color: var(--text-dim);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .link-url-text {
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .more-links-badge {
+      font-size: 10px; color: var(--text-dim); font-family: var(--mono);
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1px 6px; display: inline-block; width: fit-content;
+    }
+
     .cell-info {
-      color: var(--text-muted);
-      max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      color: var(--text-muted); max-width: 160px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .tag-pill {
-      display: inline-block;
-      background: rgba(93,125,255,0.12);
-      color: var(--accent);
-      border: 1px solid rgba(93,125,255,0.3);
-      border-radius: 99px;
-      padding: 2px 9px;
-      font-size: 11px;
-      font-weight: 500;
-      white-space: nowrap;
+      display: inline-block; background: rgba(93,125,255,0.12); color: var(--accent);
+      border: 1px solid rgba(93,125,255,0.3); border-radius: 99px;
+      padding: 2px 9px; font-size: 11px; font-weight: 500; white-space: nowrap;
     }
     .action-group { display: flex; gap: 6px; }
     .btn-edit, .btn-delete {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: transparent;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); background: transparent; cursor: pointer;
       transition: color var(--trans), border-color var(--trans), background var(--trans);
     }
-    .btn-edit  { color: var(--text-muted); }
-    .btn-edit:hover  { color: var(--yellow); border-color: var(--yellow); background: rgba(255,192,77,0.08); }
+    .btn-edit   { color: var(--text-muted); }
+    .btn-edit:hover   { color: var(--yellow); border-color: var(--yellow); background: rgba(255,192,77,0.08); }
     .btn-delete { color: var(--text-muted); }
     .btn-delete:hover { color: var(--red); border-color: var(--red); background: rgba(255,92,106,0.08); }
     .btn-edit svg, .btn-delete svg { width: 14px; height: 14px; }
 
     .empty-state {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 72px 24px;
-      color: var(--text-dim);
-      text-align: center;
-      gap: 12px;
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; padding: 72px 24px; color: var(--text-dim);
+      text-align: center; gap: 12px;
     }
     .empty-state.visible { display: flex; }
     .empty-icon { font-size: 40px; opacity: 0.4; }
@@ -297,134 +204,137 @@
 
     /* ─── MODAL ─────────────────────────────────────────── */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity var(--trans);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px); display: flex; align-items: center;
+      justify-content: center; z-index: 200;
+      opacity: 0; pointer-events: none; transition: opacity var(--trans);
     }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
     .modal {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 500px;
-      margin: 0 16px;
-      box-shadow: var(--shadow);
-      transform: translateY(12px);
-      transition: transform var(--trans);
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--radius); width: 100%; max-width: 540px;
+      margin: 0 16px; box-shadow: var(--shadow);
+      transform: translateY(12px); transition: transform var(--trans);
+      max-height: 90vh; display: flex; flex-direction: column;
     }
     .modal-overlay.open .modal { transform: translateY(0); }
     .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 22px 14px;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px 14px; border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
     .modal-title { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
     .modal-close {
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      font-size: 16px;
-      cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-      transition: color var(--trans);
+      background: none; border: none; color: var(--text-dim); font-size: 16px;
+      cursor: pointer; padding: 4px; line-height: 1; transition: color var(--trans);
     }
     .modal-close:hover { color: var(--text); }
     .modal-body {
-      padding: 20px 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      padding: 20px 22px; display: flex; flex-direction: column;
+      gap: 14px; overflow-y: auto;
     }
     .field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
     .field label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
     .req { color: var(--red); }
     .field input {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 13px;
-      padding: 9px 12px;
-      outline: none;
-      transition: border-color var(--trans);
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: var(--font); font-size: 13px; padding: 9px 12px;
+      outline: none; transition: border-color var(--trans);
     }
     .field input:focus { border-color: var(--accent); }
     .field input::placeholder { color: var(--text-dim); }
     .field input.err { border-color: var(--red); }
     .field-err { font-size: 11px; color: var(--red); min-height: 14px; }
     .field-row { display: flex; gap: 12px; }
+
+    /* ── URL list inside modal ── */
+    .url-list { display: flex; flex-direction: column; gap: 8px; }
+    .url-row {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .url-row input.url-label-inp {
+      width: 110px; flex-shrink: 0;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: var(--font); font-size: 12px; padding: 8px 10px;
+      outline: none; transition: border-color var(--trans);
+    }
+    .url-row input.url-label-inp:focus { border-color: var(--accent); }
+    .url-row input.url-label-inp::placeholder { color: var(--text-dim); }
+    .url-row input.url-inp {
+      flex: 1;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: var(--mono); font-size: 12px; padding: 8px 10px;
+      outline: none; transition: border-color var(--trans);
+    }
+    .url-row input.url-inp:focus { border-color: var(--accent); }
+    .url-row input.url-inp::placeholder { color: var(--text-dim); font-family: var(--font); }
+    .url-row input.url-inp.err { border-color: var(--red); }
+    .btn-remove-url {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); cursor: pointer; color: var(--text-dim);
+      transition: color var(--trans), border-color var(--trans), background var(--trans);
+    }
+    .btn-remove-url:hover { color: var(--red); border-color: var(--red); background: rgba(255,92,106,0.08); }
+    .btn-remove-url svg { width: 12px; height: 12px; }
+    .url-col-labels {
+      display: flex; gap: 6px; align-items: center;
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-dim); margin-bottom: 2px;
+    }
+    .url-col-labels .lbl-label { width: 110px; flex-shrink: 0; }
+    .url-col-labels .lbl-url   { flex: 1; }
+    .url-col-labels .lbl-rm    { width: 28px; flex-shrink: 0; }
+
+    .btn-add-url {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: none; border: 1px dashed var(--border2);
+      border-radius: var(--radius-sm); color: var(--text-muted);
+      font-family: var(--font); font-size: 12px; font-weight: 500;
+      padding: 7px 12px; cursor: pointer;
+      transition: color var(--trans), border-color var(--trans);
+      width: 100%;
+    }
+    .btn-add-url:hover { color: var(--accent); border-color: var(--accent); }
+
     .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      padding: 14px 22px 18px;
-      border-top: 1px solid var(--border);
+      display: flex; justify-content: flex-end; gap: 10px;
+      padding: 14px 22px 18px; border-top: 1px solid var(--border);
+      flex-shrink: 0;
     }
     .btn-cancel {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-muted);
-      font-family: var(--font);
-      font-size: 13px;
-      padding: 8px 16px;
-      cursor: pointer;
+      background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text-muted); font-family: var(--font); font-size: 13px;
+      padding: 8px 16px; cursor: pointer;
       transition: border-color var(--trans), color var(--trans);
     }
     .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
     .btn-save {
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius-sm);
-      color: #fff;
-      font-family: var(--font);
-      font-size: 13px;
-      font-weight: 600;
-      padding: 8px 20px;
-      cursor: pointer;
+      background: var(--accent); border: none; border-radius: var(--radius-sm);
+      color: #fff; font-family: var(--font); font-size: 13px; font-weight: 600;
+      padding: 8px 20px; cursor: pointer;
       transition: background var(--trans), box-shadow var(--trans);
     }
     .btn-save:hover { background: #7494ff; box-shadow: 0 0 12px var(--accent-glow); }
 
     /* ─── TOAST ─────────────────────────────────────────── */
     .toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
+      position: fixed; bottom: 28px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      color: var(--text);
-      padding: 10px 20px;
-      border-radius: 99px;
-      font-size: 13px;
-      font-weight: 500;
-      box-shadow: var(--shadow);
-      opacity: 0;
+      background: var(--surface2); border: 1px solid var(--border2); color: var(--text);
+      padding: 10px 20px; border-radius: 99px; font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow); opacity: 0;
       transition: opacity 0.22s ease, transform 0.22s ease;
-      z-index: 300;
-      white-space: nowrap;
+      z-index: 300; white-space: nowrap;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.show    { opacity: 1; transform: translateX(-50%) translateY(0); }
     .toast.success { border-color: var(--green); color: var(--green); }
     .toast.error   { border-color: var(--red);   color: var(--red); }
 
@@ -438,6 +348,7 @@
       .header-inner, .toolbar-inner, .table-wrap { padding-left: 14px; padding-right: 14px; }
       .col-info2, .col-tag { display: none; }
       .field-row { flex-direction: column; }
+      .url-row input.url-label-inp { width: 80px; }
     }
   </style>
 </head>
@@ -488,11 +399,11 @@
       <thead>
         <tr>
           <th class="col-sl">#</th>
-          <th class="col-title" data-sort="title">Title <span class="sort-arrow"></span></th>
-          <th class="col-link">Link</th>
-          <th class="col-info1" data-sort="info1">Info 1 <span class="sort-arrow"></span></th>
-          <th class="col-info2" data-sort="info2">Info 2 <span class="sort-arrow"></span></th>
-          <th class="col-tag"   data-sort="tag">Tag <span class="sort-arrow"></span></th>
+          <th class="col-title"   data-sort="title">Title <span class="sort-arrow"></span></th>
+          <th class="col-link">Links</th>
+          <th class="col-info1"   data-sort="info1">Info 1 <span class="sort-arrow"></span></th>
+          <th class="col-info2"   data-sort="info2">Info 2 <span class="sort-arrow"></span></th>
+          <th class="col-tag"     data-sort="tag">Tag <span class="sort-arrow"></span></th>
           <th class="col-actions">Actions</th>
         </tr>
       </thead>
@@ -512,16 +423,31 @@
         <button class="modal-close" id="closeModalBtn">✕</button>
       </div>
       <div class="modal-body">
+
+        <!-- Title -->
         <div class="field">
           <label for="inputTitle">Title <span class="req">*</span></label>
           <input type="text" id="inputTitle" placeholder="e.g. MDN Web Docs" />
           <span class="field-err" id="errTitle"></span>
         </div>
+
+        <!-- URLs (dynamic) -->
         <div class="field">
-          <label for="inputLink">URL <span class="req">*</span></label>
-          <input type="url" id="inputLink" placeholder="https://…" />
-          <span class="field-err" id="errLink"></span>
+          <label>URLs <span class="req">*</span></label>
+          <div class="url-col-labels">
+            <span class="lbl-label">Label</span>
+            <span class="lbl-url">URL</span>
+            <span class="lbl-rm"></span>
+          </div>
+          <div class="url-list" id="urlList"></div>
+          <button type="button" class="btn-add-url" id="addUrlBtn">
+            <svg viewBox="0 0 16 16" fill="none" style="width:13px;height:13px"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Add another URL
+          </button>
+          <span class="field-err" id="errUrls"></span>
         </div>
+
+        <!-- Info row -->
         <div class="field-row">
           <div class="field">
             <label for="inputInfo1">Info 1</label>
@@ -532,10 +458,13 @@
             <input type="text" id="inputInfo2" placeholder="Date, status…" />
           </div>
         </div>
+
+        <!-- Tag -->
         <div class="field">
           <label for="inputTag">Tag</label>
           <input type="text" id="inputTag" placeholder="design, dev, reference…" />
         </div>
+
       </div>
       <div class="modal-footer">
         <button class="btn-cancel" id="cancelBtn">Cancel</button>
@@ -548,304 +477,380 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    /* =========================================================
-       LinkVault — inline script
-       Persists to localStorage. Zero dependencies.
-       ========================================================= */
-    (function () {
-      'use strict';
+  (function () {
+    'use strict';
 
-      const STORAGE_KEY = 'linkvault_links';
+    const STORAGE_KEY = 'linkvault_links';
+    function loadLinks() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+    function saveLinks(l) { localStorage.setItem(STORAGE_KEY, JSON.stringify(l)); }
 
-      function loadLinks() {
-        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-        catch { return []; }
-      }
-      function saveLinks(links) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
-      }
+    /* ── State ─────────────────────────────────────────── */
+    let links       = loadLinks();
+    let editingId   = null;
+    let sortKey     = null;
+    let sortDir     = 1;
+    let filterQuery = '';
+    let filterTag   = '';
 
-      /* ── State ─────────────────────────────────────────── */
-      let links       = loadLinks();
-      let editingId   = null;
-      let sortKey     = null;
-      let sortDir     = 1;
-      let filterQuery = '';
-      let filterTag   = '';
+    /* ── DOM ───────────────────────────────────────────── */
+    const tableBody    = document.getElementById('tableBody');
+    const emptyState   = document.getElementById('emptyState');
+    const linkCount    = document.getElementById('linkCount');
+    const searchInput  = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterTag');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle   = document.getElementById('modalTitle');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn= document.getElementById('closeModalBtn');
+    const cancelBtn    = document.getElementById('cancelBtn');
+    const saveBtn      = document.getElementById('saveBtn');
+    const exportBtn    = document.getElementById('exportBtn');
+    const importFile   = document.getElementById('importFile');
+    const toast        = document.getElementById('toast');
+    const inputTitle   = document.getElementById('inputTitle');
+    const inputInfo1   = document.getElementById('inputInfo1');
+    const inputInfo2   = document.getElementById('inputInfo2');
+    const inputTag     = document.getElementById('inputTag');
+    const errTitle     = document.getElementById('errTitle');
+    const errUrls      = document.getElementById('errUrls');
+    const urlList      = document.getElementById('urlList');
+    const addUrlBtn    = document.getElementById('addUrlBtn');
 
-      /* ── DOM ───────────────────────────────────────────── */
-      const tableBody    = document.getElementById('tableBody');
-      const emptyState   = document.getElementById('emptyState');
-      const linkCount    = document.getElementById('linkCount');
-      const searchInput  = document.getElementById('searchInput');
-      const filterSelect = document.getElementById('filterTag');
-      const modalOverlay = document.getElementById('modalOverlay');
-      const modalTitle   = document.getElementById('modalTitle');
-      const openModalBtn = document.getElementById('openModalBtn');
-      const closeModalBtn= document.getElementById('closeModalBtn');
-      const cancelBtn    = document.getElementById('cancelBtn');
-      const saveBtn      = document.getElementById('saveBtn');
-      const exportBtn    = document.getElementById('exportBtn');
-      const importFile   = document.getElementById('importFile');
-      const toast        = document.getElementById('toast');
-      const inputTitle   = document.getElementById('inputTitle');
-      const inputLink    = document.getElementById('inputLink');
-      const inputInfo1   = document.getElementById('inputInfo1');
-      const inputInfo2   = document.getElementById('inputInfo2');
-      const inputTag     = document.getElementById('inputTag');
-      const errTitle     = document.getElementById('errTitle');
-      const errLink      = document.getElementById('errLink');
+    /* ── Helpers ───────────────────────────────────────── */
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function isValidURL(s) { try { new URL(s); return true; } catch { return false; } }
 
-      /* ── Helpers ───────────────────────────────────────── */
-      function uid() {
-        return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-      }
+    /* ── Toast ─────────────────────────────────────────── */
+    let toastTimer = null;
+    function showToast(msg, type='success') {
+      toast.textContent = msg;
+      toast.className = `toast ${type} show`;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+    }
 
-      function esc(str) {
-        return String(str)
-          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-          .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-      }
-
-      function validateURL(s) { try { new URL(s); return true; } catch { return false; } }
-
-      /* ── Toast ─────────────────────────────────────────── */
-      let toastTimer = null;
-      function showToast(msg, type = 'success') {
-        toast.textContent = msg;
-        toast.className = `toast ${type} show`;
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
-      }
-
-      /* ── Modal ─────────────────────────────────────────── */
-      function openModal(link = null) {
-        editingId        = link ? link.id    : null;
-        modalTitle.textContent = link ? 'Edit Link' : 'Add Link';
-        inputTitle.value = link ? link.title : '';
-        inputLink.value  = link ? link.url   : '';
-        inputInfo1.value = link ? link.info1 : '';
-        inputInfo2.value = link ? link.info2 : '';
-        inputTag.value   = link ? link.tag   : '';
-        clearErrors();
-        modalOverlay.classList.add('open');
-        setTimeout(() => inputTitle.focus(), 80);
-      }
-
-      function closeModal() {
-        modalOverlay.classList.remove('open');
-        editingId = null;
-      }
-
-      function clearErrors() {
-        errTitle.textContent = '';
-        errLink.textContent  = '';
-        inputTitle.classList.remove('err');
-        inputLink.classList.remove('err');
-      }
-
-      /* ── Save ──────────────────────────────────────────── */
-      function handleSave() {
-        clearErrors();
-        let valid = true;
-        const title = inputTitle.value.trim();
-        const url   = inputLink.value.trim();
-        const info1 = inputInfo1.value.trim();
-        const info2 = inputInfo2.value.trim();
-        const tag   = inputTag.value.trim().toLowerCase();
-
-        if (!title) {
-          errTitle.textContent = 'Title is required.';
-          inputTitle.classList.add('err');
-          valid = false;
-        }
-        if (!url) {
-          errLink.textContent = 'URL is required.';
-          inputLink.classList.add('err');
-          valid = false;
-        } else if (!validateURL(url)) {
-          errLink.textContent = 'Enter a valid URL (include https://).';
-          inputLink.classList.add('err');
-          valid = false;
-        }
-        if (!valid) return;
-
-        if (editingId) {
-          const idx = links.findIndex(l => l.id === editingId);
-          if (idx !== -1) {
-            links[idx] = { ...links[idx], title, url, info1, info2, tag, updatedAt: Date.now() };
-            showToast('Link updated ✓');
-          }
+    /* ══════════════════════════════════════════════════════
+       URL ROWS — dynamic multi-link input inside modal
+    ══════════════════════════════════════════════════════ */
+    function buildUrlRow(labelVal='', urlVal='') {
+      const row = document.createElement('div');
+      row.className = 'url-row';
+      row.innerHTML = `
+        <input class="url-label-inp" type="text" placeholder="Label (opt.)" value="${esc(labelVal)}" maxlength="30" />
+        <input class="url-inp" type="url" placeholder="https://…" value="${esc(urlVal)}" />
+        <button type="button" class="btn-remove-url" title="Remove">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      `;
+      row.querySelector('.btn-remove-url').addEventListener('click', () => {
+        if (urlList.children.length > 1) {
+          row.remove();
         } else {
-          links.push({ id: uid(), title, url, info1, info2, tag, createdAt: Date.now(), updatedAt: Date.now() });
-          showToast('Link saved ✓');
+          // clear rather than delete the last row
+          row.querySelector('.url-label-inp').value = '';
+          row.querySelector('.url-inp').value = '';
         }
+      });
+      return row;
+    }
 
-        saveLinks(links);
-        closeModal();
-        render();
+    function populateUrlList(urls) {
+      urlList.innerHTML = '';
+      if (!urls || urls.length === 0) {
+        urlList.appendChild(buildUrlRow());
+      } else {
+        urls.forEach(u => urlList.appendChild(buildUrlRow(u.label || '', u.url || '')));
+      }
+    }
+
+    function collectUrls() {
+      // returns [{label, url}, …] filtering blank rows
+      return Array.from(urlList.querySelectorAll('.url-row')).map(row => ({
+        label: row.querySelector('.url-label-inp').value.trim(),
+        url:   row.querySelector('.url-inp').value.trim(),
+      })).filter(u => u.url !== '');
+    }
+
+    addUrlBtn.addEventListener('click', () => {
+      urlList.appendChild(buildUrlRow());
+      urlList.lastElementChild.querySelector('.url-inp').focus();
+    });
+
+    /* ── Modal open / close ────────────────────────────── */
+    function openModal(entry = null) {
+      editingId = entry ? entry.id : null;
+      modalTitle.textContent = entry ? 'Edit Link' : 'Add Link';
+      inputTitle.value = entry ? entry.title : '';
+      inputInfo1.value = entry ? entry.info1 : '';
+      inputInfo2.value = entry ? entry.info2 : '';
+      inputTag.value   = entry ? entry.tag   : '';
+      populateUrlList(entry ? entry.urls : null);
+      clearErrors();
+      modalOverlay.classList.add('open');
+      setTimeout(() => inputTitle.focus(), 80);
+    }
+
+    function closeModal() { modalOverlay.classList.remove('open'); editingId = null; }
+
+    function clearErrors() {
+      errTitle.textContent = '';
+      errUrls.textContent  = '';
+      inputTitle.classList.remove('err');
+      urlList.querySelectorAll('.url-inp').forEach(i => i.classList.remove('err'));
+    }
+
+    /* ── Save ──────────────────────────────────────────── */
+    function handleSave() {
+      clearErrors();
+      let valid = true;
+      const title = inputTitle.value.trim();
+      const info1 = inputInfo1.value.trim();
+      const info2 = inputInfo2.value.trim();
+      const tag   = inputTag.value.trim().toLowerCase();
+      const urlRows = Array.from(urlList.querySelectorAll('.url-row'));
+
+      // validate title
+      if (!title) {
+        errTitle.textContent = 'Title is required.';
+        inputTitle.classList.add('err');
+        valid = false;
       }
 
-      /* ── Delete ────────────────────────────────────────── */
-      function handleDelete(id) {
-        if (!confirm('Delete this link?')) return;
-        links = links.filter(l => l.id !== id);
-        saveLinks(links);
-        render();
-        showToast('Link deleted', 'error');
-      }
-
-      /* ── Sort ──────────────────────────────────────────── */
-      function handleSort(key) {
-        sortDir = sortKey === key ? sortDir * -1 : 1;
-        sortKey = key;
-        render();
-      }
-
-      /* ── Filter ────────────────────────────────────────── */
-      function getFiltered() {
-        let result = [...links];
-        if (filterQuery) {
-          const q = filterQuery.toLowerCase();
-          result = result.filter(l =>
-            l.title.toLowerCase().includes(q) ||
-            l.url.toLowerCase().includes(q)   ||
-            l.info1.toLowerCase().includes(q) ||
-            l.info2.toLowerCase().includes(q) ||
-            l.tag.toLowerCase().includes(q)
-          );
+      // validate each non-empty URL row; also check at least one exists
+      let hasAny = false;
+      urlRows.forEach(row => {
+        const inp = row.querySelector('.url-inp');
+        const val = inp.value.trim();
+        if (!val) return; // blank rows are OK (ignored)
+        hasAny = true;
+        if (!isValidURL(val)) {
+          inp.classList.add('err');
+          errUrls.textContent = 'One or more URLs are invalid (include https://).';
+          valid = false;
         }
-        if (filterTag) result = result.filter(l => l.tag === filterTag);
-        if (sortKey) {
-          result.sort((a, b) => {
-            const va = (a[sortKey] || '').toString().toLowerCase();
-            const vb = (b[sortKey] || '').toString().toLowerCase();
-            return va < vb ? -sortDir : va > vb ? sortDir : 0;
-          });
+      });
+      if (!hasAny) {
+        urlList.querySelector('.url-inp').classList.add('err');
+        errUrls.textContent = 'At least one URL is required.';
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      const urls = urlRows
+        .map(row => ({ label: row.querySelector('.url-label-inp').value.trim(), url: row.querySelector('.url-inp').value.trim() }))
+        .filter(u => u.url);
+
+      if (editingId) {
+        const idx = links.findIndex(l => l.id === editingId);
+        if (idx !== -1) {
+          links[idx] = { ...links[idx], title, urls, info1, info2, tag, updatedAt: Date.now() };
+          showToast('Link updated ✓');
         }
-        return result;
+      } else {
+        links.push({ id: uid(), title, urls, info1, info2, tag, createdAt: Date.now(), updatedAt: Date.now() });
+        showToast('Link saved ✓');
       }
 
-      /* ── Tag dropdown ──────────────────────────────────── */
-      function refreshTagFilter() {
-        const tags    = [...new Set(links.map(l => l.tag).filter(Boolean))].sort();
-        const current = filterSelect.value;
-        filterSelect.innerHTML = '<option value="">All tags</option>';
-        tags.forEach(t => {
-          const opt = document.createElement('option');
-          opt.value = t; opt.textContent = t;
-          filterSelect.appendChild(opt);
-        });
-        filterSelect.value = tags.includes(current) ? current : '';
-      }
-
-      /* ── Render ────────────────────────────────────────── */
-      function render() {
-        refreshTagFilter();
-        const rows = getFiltered();
-        linkCount.textContent = `${links.length} link${links.length !== 1 ? 's' : ''}`;
-
-        document.querySelectorAll('.link-table th[data-sort]').forEach(th => {
-          const arrow = th.querySelector('.sort-arrow');
-          if (!arrow) return;
-          arrow.textContent = th.dataset.sort === sortKey ? (sortDir === 1 ? ' ↑' : ' ↓') : '';
-        });
-
-        if (rows.length === 0) {
-          tableBody.innerHTML = '';
-          emptyState.classList.add('visible');
-          return;
-        }
-        emptyState.classList.remove('visible');
-
-        tableBody.innerHTML = rows.map((link, idx) => `
-          <tr data-id="${esc(link.id)}">
-            <td><span class="sl-num">${String(idx + 1).padStart(2, '0')}</span></td>
-            <td><div class="cell-title" title="${esc(link.title)}">${esc(link.title)}</div></td>
-            <td class="cell-link">
-              <a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer" title="${esc(link.url)}">${esc(link.url)}</a>
-            </td>
-            <td><div class="cell-info" title="${esc(link.info1)}">${esc(link.info1) || '<span style="color:var(--text-dim)">—</span>'}</div></td>
-            <td><div class="cell-info" title="${esc(link.info2)}">${esc(link.info2) || '<span style="color:var(--text-dim)">—</span>'}</div></td>
-            <td>${link.tag ? `<span class="tag-pill">${esc(link.tag)}</span>` : '<span style="color:var(--text-dim)">—</span>'}</td>
-            <td>
-              <div class="action-group">
-                <button class="btn-edit"   data-id="${esc(link.id)}" title="Edit">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M11 2l3 3-8 8H3v-3l8-8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-                </button>
-                <button class="btn-delete" data-id="${esc(link.id)}" title="Delete">
-                  <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6 4V3h4v1M5 4l1 9h4l1-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-        `).join('');
-      }
-
-      /* ── Events ────────────────────────────────────────── */
-      tableBody.addEventListener('click', e => {
-        const editBtn   = e.target.closest('.btn-edit');
-        const deleteBtn = e.target.closest('.btn-delete');
-        if (editBtn)   { const link = links.find(l => l.id === editBtn.dataset.id);   if (link) openModal(link); }
-        if (deleteBtn) { handleDelete(deleteBtn.dataset.id); }
-      });
-
-      document.querySelectorAll('.link-table th[data-sort]').forEach(th =>
-        th.addEventListener('click', () => handleSort(th.dataset.sort))
-      );
-
-      searchInput.addEventListener('input',  () => { filterQuery = searchInput.value.trim(); render(); });
-      filterSelect.addEventListener('change',() => { filterTag   = filterSelect.value;        render(); });
-
-      openModalBtn.addEventListener('click',  () => openModal());
-      closeModalBtn.addEventListener('click', closeModal);
-      cancelBtn.addEventListener('click',     closeModal);
-      saveBtn.addEventListener('click',       handleSave);
-
-      modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
-
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeModal();
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && modalOverlay.classList.contains('open')) handleSave();
-      });
-
-      /* ── Export ────────────────────────────────────────── */
-      exportBtn.addEventListener('click', () => {
-        if (!links.length) { showToast('No links to export', 'error'); return; }
-        const blob = new Blob([JSON.stringify(links, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `linkvault-${new Date().toISOString().slice(0,10)}.json`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-        showToast(`Exported ${links.length} links ✓`);
-      });
-
-      /* ── Import ────────────────────────────────────────── */
-      importFile.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => {
-          try {
-            const imported = JSON.parse(ev.target.result);
-            if (!Array.isArray(imported)) throw new Error();
-            const existingIds = new Set(links.map(l => l.id));
-            const fresh = imported.filter(l => l.url && l.title && !existingIds.has(l.id));
-            links = [...links, ...fresh];
-            saveLinks(links);
-            render();
-            showToast(`Imported ${fresh.length} new link(s) ✓`);
-          } catch { showToast('Invalid JSON file', 'error'); }
-          importFile.value = '';
-        };
-        reader.readAsText(file);
-      });
-
-      /* ── Init ──────────────────────────────────────────── */
+      saveLinks(links);
+      closeModal();
       render();
+    }
 
-    })();
+    /* ── Delete ────────────────────────────────────────── */
+    function handleDelete(id) {
+      if (!confirm('Delete this entry?')) return;
+      links = links.filter(l => l.id !== id);
+      saveLinks(links);
+      render();
+      showToast('Entry deleted', 'error');
+    }
+
+    /* ── Sort ──────────────────────────────────────────── */
+    function handleSort(key) {
+      sortDir = sortKey === key ? sortDir * -1 : 1;
+      sortKey = key;
+      render();
+    }
+
+    /* ── Filter ────────────────────────────────────────── */
+    function getFiltered() {
+      let result = [...links];
+      if (filterQuery) {
+        const q = filterQuery.toLowerCase();
+        result = result.filter(l =>
+          l.title.toLowerCase().includes(q) ||
+          l.info1.toLowerCase().includes(q) ||
+          l.info2.toLowerCase().includes(q) ||
+          l.tag.toLowerCase().includes(q)   ||
+          (l.urls || []).some(u => u.url.toLowerCase().includes(q) || (u.label||'').toLowerCase().includes(q))
+        );
+      }
+      if (filterTag) result = result.filter(l => l.tag === filterTag);
+      if (sortKey) {
+        result.sort((a, b) => {
+          const va = (a[sortKey] || '').toString().toLowerCase();
+          const vb = (b[sortKey] || '').toString().toLowerCase();
+          return va < vb ? -sortDir : va > vb ? sortDir : 0;
+        });
+      }
+      return result;
+    }
+
+    /* ── Tag dropdown ──────────────────────────────────── */
+    function refreshTagFilter() {
+      const tags = [...new Set(links.map(l => l.tag).filter(Boolean))].sort();
+      const cur  = filterSelect.value;
+      filterSelect.innerHTML = '<option value="">All tags</option>';
+      tags.forEach(t => {
+        const o = document.createElement('option');
+        o.value = t; o.textContent = t;
+        filterSelect.appendChild(o);
+      });
+      filterSelect.value = tags.includes(cur) ? cur : '';
+    }
+
+    /* ── Render links cell ─────────────────────────────── */
+    function renderLinksCell(urls) {
+      if (!urls || urls.length === 0) return '<span style="color:var(--text-dim)">—</span>';
+      const MAX_SHOW = 3;
+      const shown = urls.slice(0, MAX_SHOW);
+      const rest  = urls.length - MAX_SHOW;
+      let html = '<div class="cell-links">';
+      shown.forEach((u, i) => {
+        const label = u.label || `Link ${i + 1}`;
+        html += `<a href="${esc(u.url)}" target="_blank" rel="noopener noreferrer" title="${esc(u.url)}">
+          <span class="link-label">${esc(label)}</span>
+          <span class="link-url-text">${esc(u.url)}</span>
+        </a>`;
+      });
+      if (rest > 0) html += `<span class="more-links-badge">+${rest} more</span>`;
+      html += '</div>';
+      return html;
+    }
+
+    /* ── Render ────────────────────────────────────────── */
+    function render() {
+      refreshTagFilter();
+      const rows = getFiltered();
+      linkCount.textContent = `${links.length} entr${links.length !== 1 ? 'ies' : 'y'}`;
+
+      document.querySelectorAll('.link-table th[data-sort]').forEach(th => {
+        const arrow = th.querySelector('.sort-arrow');
+        if (!arrow) return;
+        arrow.textContent = th.dataset.sort === sortKey ? (sortDir === 1 ? ' ↑' : ' ↓') : '';
+      });
+
+      if (rows.length === 0) {
+        tableBody.innerHTML = '';
+        emptyState.classList.add('visible');
+        return;
+      }
+      emptyState.classList.remove('visible');
+
+      tableBody.innerHTML = rows.map((entry, idx) => `
+        <tr data-id="${esc(entry.id)}">
+          <td><span class="sl-num">${String(idx + 1).padStart(2, '0')}</span></td>
+          <td><div class="cell-title" title="${esc(entry.title)}">${esc(entry.title)}</div></td>
+          <td>${renderLinksCell(entry.urls)}</td>
+          <td><div class="cell-info" title="${esc(entry.info1)}">${esc(entry.info1) || '<span style="color:var(--text-dim)">—</span>'}</div></td>
+          <td><div class="cell-info" title="${esc(entry.info2)}">${esc(entry.info2) || '<span style="color:var(--text-dim)">—</span>'}</div></td>
+          <td>${entry.tag ? `<span class="tag-pill">${esc(entry.tag)}</span>` : '<span style="color:var(--text-dim)">—</span>'}</td>
+          <td>
+            <div class="action-group">
+              <button class="btn-edit"   data-id="${esc(entry.id)}" title="Edit">
+                <svg viewBox="0 0 16 16" fill="none"><path d="M11 2l3 3-8 8H3v-3l8-8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="btn-delete" data-id="${esc(entry.id)}" title="Delete">
+                <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6 4V3h4v1M5 4l1 9h4l1-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    /* ── Migrate old single-url entries ─────────────────── */
+    function migrate() {
+      let changed = false;
+      links = links.map(l => {
+        if (!l.urls) {
+          changed = true;
+          return { ...l, urls: l.url ? [{ label: '', url: l.url }] : [] };
+        }
+        return l;
+      });
+      if (changed) saveLinks(links);
+    }
+
+    /* ── Events ────────────────────────────────────────── */
+    tableBody.addEventListener('click', e => {
+      const editBtn   = e.target.closest('.btn-edit');
+      const deleteBtn = e.target.closest('.btn-delete');
+      if (editBtn)   { const entry = links.find(l => l.id === editBtn.dataset.id);   if (entry) openModal(entry); }
+      if (deleteBtn) { handleDelete(deleteBtn.dataset.id); }
+    });
+
+    document.querySelectorAll('.link-table th[data-sort]').forEach(th =>
+      th.addEventListener('click', () => handleSort(th.dataset.sort))
+    );
+
+    searchInput.addEventListener('input',   () => { filterQuery = searchInput.value.trim(); render(); });
+    filterSelect.addEventListener('change', () => { filterTag   = filterSelect.value;        render(); });
+
+    openModalBtn.addEventListener('click',  () => openModal());
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click',     closeModal);
+    saveBtn.addEventListener('click',       handleSave);
+
+    modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && modalOverlay.classList.contains('open')) handleSave();
+    });
+
+    /* ── Export ────────────────────────────────────────── */
+    exportBtn.addEventListener('click', () => {
+      if (!links.length) { showToast('No entries to export', 'error'); return; }
+      const blob = new Blob([JSON.stringify(links, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `linkvault-${new Date().toISOString().slice(0,10)}.json`;
+      a.click(); URL.revokeObjectURL(a.href);
+      showToast(`Exported ${links.length} entries ✓`);
+    });
+
+    /* ── Import ────────────────────────────────────────── */
+    importFile.addEventListener('change', e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const imported = JSON.parse(ev.target.result);
+          if (!Array.isArray(imported)) throw new Error();
+          const existingIds = new Set(links.map(l => l.id));
+          const fresh = imported.filter(l => l.title && !existingIds.has(l.id));
+          links = [...links, ...fresh];
+          migrate();
+          saveLinks(links);
+          render();
+          showToast(`Imported ${fresh.length} new entr${fresh.length !== 1 ? 'ies' : 'y'} ✓`);
+        } catch { showToast('Invalid JSON file', 'error'); }
+        importFile.value = '';
+      };
+      reader.readAsText(file);
+    });
+
+    /* ── Init ──────────────────────────────────────────── */
+    migrate();
+    render();
+
+  })();
   </script>
 </body>
 </html>
