@@ -556,34 +556,39 @@
         /* columns */
         .col-sl {
             width: 52px;
+            min-width: 52px;
         }
 
         .col-title {
+            min-width: 180px;
             white-space: nowrap;
         }
 
         .col-link {
-            min-width: 220px;
+            min-width: 200px;
         }
 
         .col-info1 {
-            min-width: 120px;
+            min-width: 110px;
         }
 
         .col-info2 {
-            min-width: 120px;
+            min-width: 110px;
         }
 
         .col-tag {
-            width: 100px;
+            min-width: 90px;
+            width: 90px;
         }
 
         .col-storage {
-            min-width: 150px;
+            min-width: 140px;
         }
 
         .col-actions {
             width: 88px;
+            min-width: 88px;
+            white-space: nowrap;
         }
 
         /* SL number */
@@ -1473,12 +1478,6 @@
                 padding-right: 16px;
             }
 
-            .col-info2,
-            .col-tag,
-            .col-storage {
-                display: none;
-            }
-
             .field-row {
                 flex-direction: column;
             }
@@ -1506,10 +1505,6 @@
         }
 
         @media (max-width: 520px) {
-            .col-info1 {
-                display: none;
-            }
-
             .btn-primary span {
                 display: none;
             }
