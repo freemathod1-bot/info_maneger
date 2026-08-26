@@ -234,6 +234,10 @@
       {
         "label": "dafa",
         "url": "https://vidking.ytbro8326.workers.dev/api/280"
+      },
+      {
+        "label": "voe sx anime worker",
+        "url": "https://voe-sx-extractor.ytbro8326.workers.dev/m-53802-4-dub"
       }
     ],
     "info1": "",
@@ -241,6 +245,6 @@
     "tag": "",
     "files": [],
     "createdAt": 1787720490711,
-    "updatedAt": 1787720490711
+    "updatedAt": 1787720611453
   }
 ]
