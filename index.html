@@ -475,8 +475,7 @@
         }
 
         .link-table {
-            width: max-content;
-            min-width: 100%;
+            width: 100%;
             border-collapse: collapse;
         }
 
@@ -486,7 +485,7 @@
         }
 
         .link-table th {
-            padding: 12px 14px;
+            padding: 13px 16px;
             text-align: left;
             font-size: 10.5px;
             font-weight: 600;
@@ -518,7 +517,7 @@
         }
 
         .link-table td {
-            padding: 12px 14px;
+            padding: 14px 16px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
             vertical-align: middle;
             font-size: 13px;
@@ -556,37 +555,35 @@
 
         /* columns */
         .col-sl {
-            width: 1%;
-            white-space: nowrap;
+            width: 52px;
         }
 
         .col-title {
-            white-space: nowrap;
+            min-width: 220px;
         }
 
         .col-link {
-            white-space: nowrap;
+            min-width: 200px;
         }
 
         .col-info1 {
-            white-space: nowrap;
+            min-width: 120px;
         }
 
         .col-info2 {
-            white-space: nowrap;
+            min-width: 120px;
         }
 
         .col-tag {
-            white-space: nowrap;
+            width: 100px;
         }
 
         .col-storage {
-            white-space: nowrap;
+            min-width: 140px;
         }
 
         .col-actions {
-            width: 1%;
-            white-space: nowrap;
+            width: 88px;
         }
 
         /* SL number */
@@ -607,6 +604,9 @@
             font-weight: 600;
             font-size: 13.5px;
             color: var(--text);
+            max-width: 70ch;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
         }
 
@@ -614,19 +614,18 @@
         .cell-links {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            white-space: nowrap;
+            gap: 6px;
         }
 
         .cell-link-row {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 6px;
-            white-space: nowrap;
+            max-width: 260px;
         }
 
         .cell-link-row a {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 6px;
             font-family: var(--mono);
@@ -634,7 +633,7 @@
             color: var(--indigo);
             text-decoration: none;
             transition: color var(--trans);
-            white-space: nowrap;
+            min-width: 0;
         }
 
         .cell-link-row a:hover {
@@ -663,6 +662,8 @@
         }
 
         .link-url-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
         }
 
@@ -681,6 +682,9 @@
         .cell-info {
             color: var(--text-muted);
             font-size: 12.5px;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
         }
 
@@ -1635,7 +1639,7 @@
                 <!-- Title -->
                 <div class="field">
                     <label class="field-label" for="inputTitle">Title <span class="req">*</span></label>
-                    <input class="input" type="text" id="inputTitle" placeholder="e.g. MDN Web Docs" />
+                    <input class="input" type="text" id="inputTitle" placeholder="e.g. MDN Web Docs" maxlength="70" />
                     <div class="field-err" id="errTitle"></div>
                 </div>
 
@@ -2372,7 +2376,7 @@
                 if (isSaving) return;
                 clearErrors();
                 let valid = true;
-                const title = inputTitle.value.trim();
+                const title = inputTitle.value.trim().slice(0, 70);
                 const info1 = inputInfo1.value.trim();
                 const info2 = inputInfo2.value.trim();
                 const tag = inputTag.value.trim().toLowerCase();
