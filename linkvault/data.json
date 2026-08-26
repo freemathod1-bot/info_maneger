@@ -78,5 +78,25 @@
     "files": [],
     "createdAt": 1787718435286,
     "updatedAt": 1787718435286
+  },
+  {
+    "id": "mt9lojhsdjlue",
+    "title": "mal mapper and mal id verifyer for a animesite",
+    "urls": [
+      {
+        "label": "main github repo url",
+        "url": "https://github.com/ytbro8326-sudo/mal_mapper/"
+      },
+      {
+        "label": ".json fetcing source for animegg",
+        "url": "https://raw.githubusercontent.com/ytbro8326-sudo/animeg_main_web_urls_list_extractor/refs/heads/main/animegg_with_alternate_titles.json"
+      }
+    ],
+    "info1": "",
+    "info2": "",
+    "tag": "",
+    "files": [],
+    "createdAt": 1787718910385,
+    "updatedAt": 1787718910385
   }
 ]
