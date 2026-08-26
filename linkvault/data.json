@@ -58,5 +58,25 @@
     "files": [],
     "createdAt": 1787717885976,
     "updatedAt": 1787717936854
+  },
+  {
+    "id": "mt9lecwmexsov",
+    "title": "m3u8 player with proxy with render server",
+    "urls": [
+      {
+        "label": "github repo url",
+        "url": "https://github.com/ytbro8326-sudo/player"
+      },
+      {
+        "label": "render url which is logged on ytbro gmail",
+        "url": "https://player-m26z.onrender.com/"
+      }
+    ],
+    "info1": "",
+    "info2": "",
+    "tag": "",
+    "files": [],
+    "createdAt": 1787718435286,
+    "updatedAt": 1787718435286
   }
 ]
