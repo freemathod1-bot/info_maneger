@@ -564,6 +564,11 @@
             white-space: nowrap;
         }
 
+        .col-link {
+            width: 1%;
+            white-space: nowrap;
+        }
+
         .col-info1 {
             width: 1%;
             white-space: nowrap;
@@ -603,44 +608,35 @@
             display: inline-block;
         }
 
-        /* title & links group - links expand into empty space on the left near title */
-        .cell-title-group {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: nowrap;
-            min-width: 0;
-        }
-
+        /* title - dynamically adapts to title length */
         .cell-title {
             font-weight: 600;
             font-size: 13.5px;
             color: var(--text);
-            max-width: 40ch;
+            max-width: 50ch;
             width: max-content;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            flex-shrink: 0;
         }
 
         /* multi-link cell */
         .cell-links {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: nowrap;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: max-content;
         }
 
         .cell-link-row {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 6px;
-            max-width: 320px;
+            max-width: 240px;
         }
 
         .cell-link-row a {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 6px;
             font-family: var(--mono);
@@ -671,11 +667,8 @@
             background: rgba(124, 106, 255, 0.12);
             border: 1px solid rgba(124, 106, 255, 0.25);
             border-radius: var(--r-xs);
-            padding: 2px 7px;
+            padding: 1px 6px;
             white-space: nowrap;
-            max-width: 220px;
-            overflow: hidden;
-            text-overflow: ellipsis;
             flex-shrink: 0;
         }
 
@@ -1649,8 +1642,9 @@
                     <tr>
                         <th class="col-sl">#</th>
                         <th class="col-title" data-sort="title">
-                            <div class="th-inner">Title & Links<span class="sort-arrow"></span></div>
+                            <div class="th-inner">Title<span class="sort-arrow"></span></div>
                         </th>
+                        <th class="col-link">Links</th>
                         <th class="col-info1" data-sort="info1">
                             <div class="th-inner">Info 1<span class="sort-arrow"></span></div>
                         </th>
@@ -2571,7 +2565,7 @@
 
             /* ── Links cell ── */
             function renderLinksCell(urls) {
-                if (!urls || !urls.length) return '';
+                if (!urls || !urls.length) return '<span class="dash">—</span>';
                 const MAX = 3, shown = urls.slice(0, MAX), rest = urls.length - MAX;
                 let h = '<div class="cell-links">';
                 shown.forEach((u, i) => {
@@ -2636,12 +2630,8 @@
                 tableBody.innerHTML = rows.map((e, i) => `
     <tr data-id="${esc(e.id)}">
       <td class="col-sl"><span class="sl-num">${String(i + 1).padStart(2, '0')}</span></td>
-      <td class="col-title">
-        <div class="cell-title-group">
-          <div class="cell-title" title="${esc(e.title)}">${esc(e.title)}</div>
-          ${renderLinksCell(e.urls)}
-        </div>
-      </td>
+      <td class="col-title"><div class="cell-title" title="${esc(e.title)}">${esc(e.title)}</div></td>
+      <td class="col-link">${renderLinksCell(e.urls)}</td>
       <td class="col-info1"><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1) || '<span class="dash">—</span>'}</div></td>
       <td class="col-info2"><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2) || '<span class="dash">—</span>'}</div></td>
       <td class="col-tag">${e.tag ? `<span class="tag-pill">${esc(e.tag)}</span>` : '<span class="dash">—</span>'}</td>
