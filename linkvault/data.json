@@ -34,5 +34,29 @@
     "files": [],
     "createdAt": 1787711922549,
     "updatedAt": 1787715941832
+  },
+  {
+    "id": "mt9l2l20qrl9r",
+    "title": "megaplay buzz streaming with githubpage slug by mal id",
+    "urls": [
+      {
+        "label": "use megaplay buzz anime streaming api",
+        "url": "https://ytbro8326-sudo.github.io/megaplay_buzz_iframe_player/mal/20/1/dub/"
+      },
+      {
+        "label": "main url",
+        "url": "https://ytbro8326-sudo.github.io/megaplay_buzz_iframe_player/"
+      },
+      {
+        "label": "mai api url",
+        "url": "https://megaplay.buzz/"
+      }
+    ],
+    "info1": "it use megplay.buzz and  myanimelist apii",
+    "info2": "",
+    "tag": "",
+    "files": [],
+    "createdAt": 1787717885976,
+    "updatedAt": 1787717885976
   }
 ]
