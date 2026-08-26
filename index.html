@@ -1019,13 +1019,13 @@ function render() {
 
   tableBody.innerHTML=rows.map((e,i)=>`
     <tr data-id="${esc(e.id)}">
-      <td><span class="sl-num">${String(i+1).padStart(2,'0')}</span></td>
-      <td><div class="cell-title" title="${esc(e.title)}">${esc(e.title)}</div></td>
-      <td>${renderLinksCell(e.urls)}</td>
-      <td><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1)||'<span class="dash">—</span>'}</div></td>
-      <td><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2)||'<span class="dash">—</span>'}</div></td>
-      <td>${e.tag?`<span class="tag-pill">${esc(e.tag)}</span>`:'<span class="dash">—</span>'}</td>
-      <td>
+      <td class="col-sl"><span class="sl-num">${String(i+1).padStart(2,'0')}</span></td>
+      <td class="col-title"><div class="cell-title" title="${esc(e.title)}">${esc(e.title)}</div></td>
+      <td class="col-link">${renderLinksCell(e.urls)}</td>
+      <td class="col-info1"><div class="cell-info" title="${esc(e.info1)}">${esc(e.info1)||'<span class="dash">—</span>'}</div></td>
+      <td class="col-info2"><div class="cell-info" title="${esc(e.info2)}">${esc(e.info2)||'<span class="dash">—</span>'}</div></td>
+      <td class="col-tag">${e.tag?`<span class="tag-pill">${esc(e.tag)}</span>`:'<span class="dash">—</span>'}</td>
+      <td class="col-actions">
         <div class="action-group">
           <button class="btn-action edit" data-id="${esc(e.id)}" title="Edit">
             <svg viewBox="0 0 16 16" fill="none"><path d="M11 2l3 3-8 8H3v-3l8-8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
